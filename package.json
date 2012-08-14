@@ -1,0 +1,24 @@
+{
+  "name": "domhandler",
+  "version": "1.0.0",
+  "description": "htmlparser2's dom as a separate module",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/00-runtests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FB55/domhandler.git"
+  },
+  "keywords": [
+    "dom",
+    "htmlparser2"
+  ],
+  "devDependencies": {
+    "htmlparser2": "2.3"
+  },
+  "author": "Felix Boehm <me@feedic.com>"
+}
