@@ -9,6 +9,7 @@
     {
       "type": "script",
       "name": "script",
+      "attribs": {},
       "children": [
         {
           "data": "<!--var foo = 1;-->",

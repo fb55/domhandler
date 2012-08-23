@@ -8,7 +8,9 @@
   "expected": [
     {
       "type": "tag",
-      "name": "link"
+      "name": "link",
+      "attribs": {},
+      "children": null
     },
     {
       "data": "text",

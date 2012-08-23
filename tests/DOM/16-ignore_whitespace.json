@@ -14,11 +14,15 @@
     },
     {
       "type": "tag",
-      "name": "br"
+      "name": "br",
+      "attribs": {},
+      "children": null
     },
     {
       "type": "tag",
-      "name": "br"
+      "name": "br",
+      "attribs": {},
+      "children": null
     },
     {
       "data": "\nline two",
@@ -27,10 +31,13 @@
     {
       "type": "tag",
       "name": "font",
+      "attribs": {},
       "children": [
         {
           "type": "tag",
-          "name": "br"
+          "name": "br",
+          "attribs": {},
+          "children": null
         },
         {
           "data": " x ",

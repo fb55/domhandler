@@ -8,7 +8,9 @@
   "expected": [
     {
       "type": "tag",
-      "name": "br"
+      "name": "br",
+      "attribs": {},
+      "children": null
     },
     {
       "data": "text",
@@ -16,7 +18,9 @@
     },
     {
       "type": "tag",
-      "name": "br"
+      "name": "br",
+      "attribs": {},
+      "children": null
     }
   ]
 }

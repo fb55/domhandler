@@ -9,6 +9,7 @@
     {
       "type": "tag",
       "name": "ns:tag",
+      "attribs": {},
       "children": [
         {
           "data": "text",

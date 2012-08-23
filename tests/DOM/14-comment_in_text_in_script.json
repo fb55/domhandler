@@ -9,6 +9,7 @@
     {
       "type": "script",
       "name": "script",
+      "attribs": {},
       "children": [
         {
           "data": "this is <!-- the comment --> the text",

@@ -9,6 +9,7 @@
     {
       "type": "tag",
       "name": "head",
+      "attribs": {},
       "children": [
         {
           "type": "script",

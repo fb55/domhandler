@@ -11,6 +11,7 @@
     {
       "type": "tag",
       "name": "link",
+      "attribs": {},
       "children": [
         {
           "data": "text",

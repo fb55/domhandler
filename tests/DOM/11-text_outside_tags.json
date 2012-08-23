@@ -12,7 +12,9 @@
     },
     {
       "type": "tag",
-      "name": "br"
+      "name": "br",
+      "attribs": {},
+      "children": null
     },
     {
       "data": "\nline two",

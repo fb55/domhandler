@@ -12,7 +12,8 @@
       "attribs": {
         "value": "foo",
         "selected": ""
-      }
+      },
+      "children": null
     }
   ]
 }

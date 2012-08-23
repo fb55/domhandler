@@ -16,10 +16,12 @@
     {
       "type": "tag",
       "name": "html",
+      "attribs": {},
       "children": [
         {
           "type": "tag",
           "name": "title",
+          "attribs": {},
           "children": [
             {
               "data": "The Title",
@@ -30,6 +32,7 @@
         {
           "type": "tag",
           "name": "body",
+          "attribs": {},
           "children": [
             {
               "data": "Hello world",
