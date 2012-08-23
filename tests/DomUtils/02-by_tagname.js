@@ -12,6 +12,7 @@ for(var i = 0; i < 20; i++) exports.expected.push(
   {
     "type": "tag",
     "name": "tag2",
+    "attribs": {},
     "children": [
       {
         "data": " text ",

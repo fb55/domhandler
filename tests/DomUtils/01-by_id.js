@@ -21,6 +21,7 @@ exports.expected = {
     {
       "type": "script",
       "name": "script",
+      "attribs": {},
       "children": [
         {
           "data": "text",
@@ -43,6 +44,7 @@ exports.expected = {
     {
       "type": "tag",
       "name": "tag2",
+      "attribs": {},
       "children": [
         {
           "data": " text ",
