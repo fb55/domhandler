@@ -4,6 +4,23 @@ var fs = require("fs"),
 var runCount = 0,
 	testCount = 0;
 
+function compare(expected, result){
+	if(typeof expected !== typeof result){
+		throw Error("types didn't match");
+	}
+	if(typeof expected !== "object" || expected === null){
+		if(expected !== result){
+			throw Error("result doesn't equal expected");
+		}
+		return;
+	}
+
+	for(var prop in expected){
+		if(!(prop in result)) throw Error("result didn't contain property " + prop);
+		compare(expected[prop], result[prop]);
+	}
+}
+
 function runTests(test){
 	//read files, load them, run them
 	fs.readdirSync(__dirname + test.dir
@@ -23,7 +40,7 @@ function runTests(test){
 		
 		test.test(file, function(err, dom){
 			assert.ifError(err);
-			assert.deepEqual(file.expected, dom, "didn't get expected output");
+			compare(file.expected, dom);
 						
 			if(second){
 				runCount--;
