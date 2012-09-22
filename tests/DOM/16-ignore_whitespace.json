@@ -15,14 +15,12 @@
     {
       "type": "tag",
       "name": "br",
-      "attribs": {},
-      "children": null
+      "attribs": {}
     },
     {
       "type": "tag",
       "name": "br",
-      "attribs": {},
-      "children": null
+      "attribs": {}
     },
     {
       "data": "\nline two",
@@ -36,8 +34,7 @@
         {
           "type": "tag",
           "name": "br",
-          "attribs": {},
-          "children": null
+          "attribs": {}
         },
         {
           "data": " x ",
