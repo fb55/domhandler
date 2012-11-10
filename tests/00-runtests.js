@@ -52,7 +52,7 @@ function runTests(test){
 	console.log("->", test.dir.slice(1, -1), "started");
 }
 
-runTests("./01-dom.js");
+runTests(require("./01-dom.js"));
 
 //log the results
 (function check(){

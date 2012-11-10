@@ -1,7 +1,7 @@
 //Runs tests for the DOM handler
 
 var helper = require("./test-helper.js"),
-	Handler = require("../lib/handler.js");
+	Handler = require("..");
 
 exports.dir = "/DOM/";
 
