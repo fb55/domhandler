@@ -1,5 +1,8 @@
-var ElementType = require("./ElementType.js"),
-    DomUtils = require("./utils.js");
+var ElementType = require("domelementtype");
+
+function isTag(elem){
+	return elem.type === ElementType.Tag || elem.type === ElementType.Script || elem.type === ElementType.Style;
+}
 
 function DomHandler(callback, options, elementCB){
 	if(typeof callback === "object"){
@@ -76,7 +79,7 @@ DomHandler.prototype.onopentag = function(name, attribs){
 	if(lastTag){
 		var idx = lastTag.children.length;
 		while(idx > 0){
-			if(DomUtils.isTag(lastTag.children[--idx])){
+			if(isTag(lastTag.children[--idx])){
 				element.prev = lastTag.children[idx];
 				lastTag.children[idx].next = element;
 				break;

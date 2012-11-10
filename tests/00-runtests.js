@@ -52,11 +52,7 @@ function runTests(test){
 	console.log("->", test.dir.slice(1, -1), "started");
 }
 
-//run all tests
-[
- "./01-dom.js",
- "./02-dom_utils.js"
-].map(require).forEach(runTests);
+runTests("./01-dom.js");
 
 //log the results
 (function check(){
