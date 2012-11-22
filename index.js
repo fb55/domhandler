@@ -1,9 +1,5 @@
 var ElementType = require("domelementtype");
 
-function isTag(elem){
-	return elem.type === ElementType.Tag || elem.type === ElementType.Script || elem.type === ElementType.Style;
-}
-
 function DomHandler(callback, options, elementCB){
 	if(typeof callback === "object"){
 		elementCB = options;
@@ -38,7 +34,7 @@ DomHandler.prototype.onend = function(){
 	this._handleCallback(null);
 };
 
-DomHandler.prototype._handleCallback = 
+DomHandler.prototype._handleCallback =
 DomHandler.prototype.onerror = function(error){
 	if(typeof this._callback === "function"){
 		this._callback(error, this.dom);
@@ -79,7 +75,7 @@ DomHandler.prototype.onopentag = function(name, attribs){
 	if(lastTag){
 		var idx = lastTag.children.length;
 		while(idx > 0){
-			if(isTag(lastTag.children[--idx])){
+			if(ElementType.isTag(lastTag.children[--idx])){
 				element.prev = lastTag.children[idx];
 				lastTag.children[idx].next = element;
 				break;
