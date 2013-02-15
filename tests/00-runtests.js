@@ -4,7 +4,7 @@ var fs = require("fs"),
     Parser = require("htmlparser2").Parser,
     Handler = require("..");
 
-var basePath = path.resolve(__dirname, "DOM"),
+var basePath = path.resolve(__dirname, "tests"),
     chunkSize = 5;
 
 fs
