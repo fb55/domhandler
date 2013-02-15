@@ -1,61 +1,51 @@
 var fs = require("fs"),
-	assert = require("assert");
+    path = require("path"),
+    assert = require("assert"),
+    Parser = require("htmlparser2").Parser,
+    Handler = require("..");
 
-var runCount = 0,
-	testCount = 0;
+var basePath = path.resolve(__dirname, "DOM"),
+    chunkSize = 5;
+
+fs
+.readdirSync(basePath)
+.filter(RegExp.prototype.test, /\.json$/) //only allow .json files
+.map(function(name){
+	return path.resolve(basePath, name);
+})
+.map(require)
+.forEach(function(test){
+	console.log("Testing:", test.name);
+
+	var handler = new Handler(function(err, dom){
+		assert.ifError(err);
+		compare(test.expected, dom);
+	}, test.options.handler);
+
+	var data = test.html;
+
+	var parser = new Parser(handler, test.options.parser);
+
+	//first, try to run the test via chunks
+	for(var i = 0; i < data.length; i+=chunkSize){
+		parser.write(data.substring(i, i + chunkSize));
+	}
+	parser.done();
+
+	//then parse everything
+	parser.parseComplete(data);
+});
+
+console.log("\nAll tests passed!");
 
 function compare(expected, result){
-	if(typeof expected !== typeof result){
-		throw Error("types didn't match");
-	}
+	assert.equal(typeof expected, typeof result, "types didn't match");
 	if(typeof expected !== "object" || expected === null){
-		if(expected !== result){
-			throw Error("result doesn't equal expected");
+		assert.strictEqual(expected, result, "result doesn't equal expected");
+	} else {
+		for(var prop in expected){
+			assert.ok(prop in result, "result didn't contain property " + prop);
+			compare(expected[prop], result[prop]);
 		}
-		return;
-	}
-
-	for(var prop in expected){
-		if(!(prop in result)) throw Error("result didn't contain property " + prop);
-		compare(expected[prop], result[prop]);
 	}
 }
-
-function runTests(test){
-	//read files, load them, run them
-	fs.readdirSync(__dirname + test.dir
-	).map(function(file){
-		if(file[0] === ".") return false;
-		if(file.substr(-5) === ".json") return JSON.parse(
-			fs.readFileSync(__dirname + test.dir + file)
-		);
-		return require(__dirname + test.dir + file);
-	}).forEach(function(file){
-		if(!file) return;
-		var second = false;
-		
-		runCount++;
-		
-		console.log("Testing:", file.name);
-		
-		test.test(file, function(err, dom){
-			assert.ifError(err);
-			compare(file.expected, dom);
-						
-			if(second){
-				runCount--;
-				testCount++;
-			}
-			else second = true;
-		});
-	});
-	console.log("->", test.dir.slice(1, -1), "started");
-}
-
-runTests(require("./01-dom.js"));
-
-//log the results
-(function check(){
-	if(runCount !== 0) return process.nextTick(check);
-	console.log("Total tests:", testCount);
-}());
