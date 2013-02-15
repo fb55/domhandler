@@ -2,7 +2,7 @@ var fs = require("fs"),
     path = require("path"),
     assert = require("assert"),
     Parser = require("htmlparser2").Parser,
-    Handler = require(".");
+    Handler = require("./");
 
 var basePath = path.resolve(__dirname, "tests"),
     chunkSize = 5;
