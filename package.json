@@ -1,6 +1,6 @@
 {
   "name": "domhandler",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "htmlparser2's dom as a separate module",
   "main": "index.js",
   "directories": {
