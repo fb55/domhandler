@@ -92,15 +92,22 @@ DomHandler.prototype.onopentag = function(name, attribs){
 DomHandler.prototype.ontext = function(data){
 	if(this._options.ignoreWhitespace && data.trim() === "") return;
 
-	var lastTag;
+	if(this._tagStack.length){
+		var lastTag;
 
-	if(
-		(lastTag = this._tagStack[this._tagStack.length - 1]) &&
-		(lastTag = lastTag.children[lastTag.children.length - 1]) &&
-		lastTag.type === ElementType.Text
-	){
-		lastTag.data += data;
-		return;
+		if(
+			(lastTag = this._tagStack[this._tagStack.length - 1]) &&
+			(lastTag = lastTag.children[lastTag.children.length - 1]) &&
+			lastTag.type === ElementType.Text
+		){
+			lastTag.data += data;
+			return;
+		}
+	} else {
+		if(this.dom.length && this.dom[this.dom.length-1].type === ElementType.Text){
+			this.dom[this.dom.length-1].data += data;
+			return;
+		}
 	}
 
 	this._addDomElement({
