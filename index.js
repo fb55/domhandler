@@ -126,17 +126,12 @@ DomHandler.prototype.oncomment = function(data){
 	this._tagStack.push(element);
 };
 
-//TODO remove duplicated code
-DomHandler.prototype.oncdata = function(data){
-	var lastTag = this._tagStack[this._tagStack.length - 1];
-
-	if(lastTag && lastTag.type === ElementType.CDATA){
-		lastTag.data += data;
-		return;
-	}
-
+DomHandler.prototype.oncdatastart = function(){
 	var element = {
-		data: data,
+		children: [{
+			data: "",
+			type: ElementType.Text
+		}],
 		type: ElementType.CDATA
 	};
 
