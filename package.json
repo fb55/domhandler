@@ -1,7 +1,7 @@
 {
   "name": "domhandler",
-  "version": "2.0.2",
-  "description": "htmlparser2's dom as a separate module",
+  "version": "2.0.3",
+  "description": "handler for htmlparser2 that turns pages into a dom structure",
   "main": "index.js",
   "directories": {
     "test": "tests"
