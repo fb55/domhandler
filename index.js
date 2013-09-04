@@ -94,23 +94,33 @@ DomHandler.prototype.onopentag = function(name, attribs){
 DomHandler.prototype.ontext = function(data){
 	//the ignoreWhitespace is officially dropped, but for now,
 	//it's an alias for normalizeWhitespace
-	if(this._options.normalizeWhitespace || this._options.ignoreWhitespace){
-		data = data.replace(re_whitespace, " ");
-	}
+	var normalize = this._options.normalizeWhitespace || this._options.ignoreWhitespace;
 
-	if(!this._tagStack.length && this.dom.length && this.dom[this.dom.length-1].type === ElementType.Text){
-		this.dom[this.dom.length-1].data += data;
+	var lastTag;
+
+	if(!this._tagStack.length && this.dom.length && (lastTag = this.dom[this.dom.length-1]).type === ElementType.Text){
+		if(normalize){
+			lastTag.data = (lastTag.data + data).replace(re_whitespace, " ");
+		} else {
+			lastTag.data += data;
+		}
 	} else {
-		var lastTag;
-
 		if(
 			this._tagStack.length &&
 			(lastTag = this._tagStack[this._tagStack.length - 1]) &&
 			(lastTag = lastTag.children[lastTag.children.length - 1]) &&
 			lastTag.type === ElementType.Text
 		){
-			lastTag.data += data;
+			if(normalize){
+				lastTag.data = (lastTag.data + data).replace(re_whitespace, " ");
+			} else {
+				lastTag.data += data;
+			}
 		} else {
+			if(normalize){
+				data = data.replace(re_whitespace, " ");
+			}
+
 			this._addDomElement({
 				data: data,
 				type: ElementType.Text
