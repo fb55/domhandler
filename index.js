@@ -1,5 +1,7 @@
 var ElementType = require("domelementtype");
 
+var re_whitespace = /\s+/g;
+
 function DomHandler(callback, options, elementCB){
 	if(typeof callback === "object"){
 		elementCB = options;
@@ -19,7 +21,7 @@ function DomHandler(callback, options, elementCB){
 
 //default options
 var defaultOpts = {
-	ignoreWhitespace: false //Keep whitespace-only text nodes
+	normalizeWhitespace: false //Replace all whitespace with single spaces
 };
 
 //Resets the handler back to starting state
@@ -90,30 +92,31 @@ DomHandler.prototype.onopentag = function(name, attribs){
 };
 
 DomHandler.prototype.ontext = function(data){
-	if(this._options.ignoreWhitespace && data.trim() === "") return;
+	//the ignoreWhitespace is officially dropped, but for now,
+	//it's an alias for normalizeWhitespace
+	if(this._options.normalizeWhitespace || this._options.ignoreWhitespace){
+		data = data.replace(re_whitespace, " ");
+	}
 
-	if(this._tagStack.length){
+	if(!this._tagStack.length && this.dom.length && this.dom[this.dom.length-1].type === ElementType.Text){
+		this.dom[this.dom.length-1].data += data;
+	} else {
 		var lastTag;
 
 		if(
+			this._tagStack.length &&
 			(lastTag = this._tagStack[this._tagStack.length - 1]) &&
 			(lastTag = lastTag.children[lastTag.children.length - 1]) &&
 			lastTag.type === ElementType.Text
 		){
 			lastTag.data += data;
-			return;
-		}
-	} else {
-		if(this.dom.length && this.dom[this.dom.length-1].type === ElementType.Text){
-			this.dom[this.dom.length-1].data += data;
-			return;
+		} else {
+			this._addDomElement({
+				data: data,
+				type: ElementType.Text
+			});
 		}
 	}
-
-	this._addDomElement({
-		data: data,
-		type: ElementType.Text
-	});
 };
 
 DomHandler.prototype.oncomment = function(data){
