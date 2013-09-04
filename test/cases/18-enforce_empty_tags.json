@@ -1,9 +1,6 @@
 {
   "name": "Enforce empty tags",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<link>text</link>",
   "expected": [
     {

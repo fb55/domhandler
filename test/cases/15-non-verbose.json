@@ -1,10 +1,9 @@
 {
-  "name": "Extra spaces in tag",
+  "name": "Option 'verbose' set to 'false'",
   "options": {
-    "handler": {},
-    "parser": {}
+    "verbose": false
   },
-  "html": "<\n font\t\n size='14' \n>the text<\n /\t\nfont\t \n>",
+  "html": "<font\t\n size='14' \n>the text</\t\nfont\t \n>",
   "expected": [
     {
       "type": "tag",

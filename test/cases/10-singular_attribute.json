@@ -1,9 +1,6 @@
 {
   "name": "Singular attribute",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<option value='foo' selected>",
   "expected": [
     {

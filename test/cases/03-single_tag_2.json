@@ -1,9 +1,6 @@
 {
   "name": "Single Tag 2",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<br>text<br>",
   "expected": [
     {

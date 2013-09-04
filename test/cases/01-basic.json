@@ -1,13 +1,10 @@
 {
   "name": "Basic test",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<!DOCTYPE html><html><title>The Title</title><body>Hello world</body></html>",
   "expected": [
     {
-      "name": "!DOCTYPE",
+      "name": "!doctype",
       "data": "!DOCTYPE html",
       "type": "directive"
     },

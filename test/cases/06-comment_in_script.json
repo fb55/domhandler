@@ -1,9 +1,6 @@
 {
   "name": "Script source in comment",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<script><!--var foo = 1;--></script>",
   "expected": [
     {

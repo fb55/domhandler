@@ -1,11 +1,6 @@
 {
-  "name": "Basic test",
-  "options": {
-    "handler": {},
-    "parser": {
-      "lowerCaseTags": true
-    }
-  },
+  "name": "lowercase tags",
+  "options": {},
   "html": "<!DOCTYPE html><HTML><TITLE>The Title</title><BODY>Hello world</body></html>",
   "expected": [
     {

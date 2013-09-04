@@ -1,9 +1,6 @@
 {
   "name": "XML Namespace",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<ns:tag>text</ns:tag>",
   "expected": [
     {

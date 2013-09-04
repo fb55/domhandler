@@ -1,9 +1,6 @@
 {
   "name": "Single Tag 1",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<br>text</br>",
   "expected": [
     {
@@ -14,6 +11,11 @@
     {
       "data": "text",
       "type": "text"
+    },
+    {
+      "type": "tag",
+      "name": "br",
+      "attribs": {}
     }
   ]
 }

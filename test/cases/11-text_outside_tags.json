@@ -1,9 +1,6 @@
 {
   "name": "Text outside tags",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "Line one\n<br>\nline two",
   "expected": [
     {

@@ -1,12 +1,7 @@
 {
-  "name": "Options 'ignoreWhitespace' set to 'true'",
-  "options": {
-    "handler": {
-      "ignoreWhitespace": true
-    },
-    "parser": {}
-  },
-  "html": "Line one\n<br> \t\n<br>\nline two<font>\n <br> x </font>",
+  "name": "Basic tags",
+  "options": {},
+  "html": "Line one\n<br><br>\nline two<font><br> x </font>",
   "expected": [
     {
       "data": "Line one\n",

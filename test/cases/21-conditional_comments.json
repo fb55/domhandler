@@ -1,9 +1,6 @@
 {
   "name": "Conditional comments",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<!--[if lt IE 7]> <html class='no-js ie6 oldie' lang='en'> <![endif]--><!--[if lt IE 7]> <html class='no-js ie6 oldie' lang='en'> <![endif]-->",
   "expected": [
     {

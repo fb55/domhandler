@@ -1,9 +1,6 @@
 {
   "name": "Unquoted attributes",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<font size= 14>the text</font>",
   "expected": [
     {

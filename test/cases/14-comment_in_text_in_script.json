@@ -1,9 +1,6 @@
 {
   "name": "Comment within text within script",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<script>this is <!-- the comment --> the text</script>",
   "expected": [
     {

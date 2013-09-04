@@ -1,9 +1,6 @@
 {
   "name": "Special char in comment",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "<head><!-- commented out tags <title>Test</title>--></head>",
   "expected": [
     {

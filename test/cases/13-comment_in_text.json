@@ -1,9 +1,6 @@
 {
   "name": "Comment within text",
-  "options": {
-    "handler": {},
-    "parser": {}
-  },
+  "options": {},
   "html": "this is <!-- the comment --> the text",
   "expected": [
     {
