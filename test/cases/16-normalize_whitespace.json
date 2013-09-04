@@ -1,10 +1,12 @@
 {
-  "name": "Basic tags",
-  "options": {},
-  "html": "Line one\n<br><br>\nline two<font><br> x </font>",
+  "name": "Normalize whitespace",
+  "options": {
+    "normalizeWhitespace": true
+  },
+  "html": "Line one\n<br>\t  \r\n\f  <br>\nline two<font><br> x </font>",
   "expected": [
     {
-      "data": "Line one\n",
+      "data": "Line one ",
       "type": "text"
     },
     {
@@ -13,12 +15,16 @@
       "attribs": {}
     },
     {
+      "data": " ",
+      "type": "text"
+    },
+    {
       "type": "tag",
       "name": "br",
       "attribs": {}
     },
     {
-      "data": "\nline two",
+      "data": " line two",
       "type": "text"
     },
     {
