@@ -12,6 +12,7 @@
       "type": "tag",
       "name": "html",
       "attribs": {},
+      "parent": null,
       "children": [
         {
           "type": "tag",
@@ -25,7 +26,12 @@
           "children": [
             {
               "data": "The Title",
-              "type": "text"
+              "type": "text",
+              "parent": {
+                "type": "tag",
+                "name": "title",
+                "attribs": {}
+              }
             }
           ]
         },

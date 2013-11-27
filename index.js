@@ -72,8 +72,10 @@ DomHandler.prototype._addDomElement = function(element){
 
 	if (parent) {
 		parent.children.push(element);
+		element.parent = parent;
 	} else { //There aren't parent elements
 		this.dom.push(element);
+		element.parent = null;
 	}
 };
 
@@ -84,8 +86,7 @@ DomHandler.prototype.onopentag = function(name, attribs){
 		type: name === "script" ? ElementType.Script : name === "style" ? ElementType.Style : ElementType.Tag,
 		name: name,
 		attribs: attribs,
-		children: [],
-		parent: lastTag || null
+		children: []
 	};
 
 	this._addDomElement(element);
