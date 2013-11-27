@@ -58,6 +58,10 @@ DomHandler.prototype._addDomElement = function(element){
 
 	element.next = null;
 
+	if (this._options.withDomLvl1) {
+		element = makeNode(element);
+	}
+
 	if(previousSibling){
 		element.prev = previousSibling;
 		previousSibling.next = element;
@@ -67,6 +71,59 @@ DomHandler.prototype._addDomElement = function(element){
 
 	siblings.push(element);
 	element.parent = parent || null;
+};
+
+// This object will be used as the prototype for Nodes when creating a
+// DOM-Level-1-compliant structure.
+var NodePrototype = {};
+var domLvl1 = {
+	tagName: 'name',
+	childNodes: 'children',
+	parentNode: 'parent',
+	previousSibling: 'prev',
+	nextSibling: 'next',
+	nodeValue: "data"
+};
+var nodeTypes = {
+	element: 1,
+	text: 3,
+	cdata: 4,
+	comment: 8
+};
+Object.keys(domLvl1).forEach(function(key) {
+	var shorthand = domLvl1[key];
+	Object.defineProperty(NodePrototype, key, {
+		get: function() {
+			return this[shorthand] || null;
+		},
+		set: function(val) {
+			this[shorthand] = val;
+			return val;
+		}
+	});
+});
+Object.defineProperties(NodePrototype, {
+	firstChild: {
+		get: function() {
+			var children = this.children;
+			return children && children[0] || null;
+		}
+	},
+	lastChild: {
+		get: function() {
+			var children = this.children;
+			return children && children[children.length - 1] || null;
+		}
+	},
+	nodeType: {
+		get: function() {
+			return nodeTypes[this.type] || nodeTypes.element;
+		}
+	}
+});
+var makeNode = DomHandler.makeNode = function(nodeData) {
+	nodeData.__proto__ = NodePrototype;
+	return nodeData;
 };
 
 DomHandler.prototype.onopentag = function(name, attribs){
