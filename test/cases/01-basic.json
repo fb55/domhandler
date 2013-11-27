@@ -17,6 +17,11 @@
           "type": "tag",
           "name": "title",
           "attribs": {},
+          "parent": {
+            "type": "tag",
+            "name": "html",
+            "attribs": {}
+          },
           "children": [
             {
               "data": "The Title",
