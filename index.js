@@ -52,10 +52,26 @@ DomHandler.prototype.onclosetag = function(name){
 };
 
 DomHandler.prototype._addDomElement = function(element){
-	var lastTag = this._tagStack[this._tagStack.length - 1];
+	var parent = this._tagStack[this._tagStack.length - 1];
+	var previousSibling;
 
-	if(lastTag){
-		lastTag.children.push(element);
+	if (parent) {
+		previousSibling = parent.children[parent.length - 1];
+	} else {
+		previousSibling = this.dom[this.dom.length - 1];
+	}
+
+	element.next = null;
+
+	if(previousSibling){
+		element.prev = previousSibling;
+		previousSibling.next = element;
+	} else {
+		element.prev = null;
+	}
+
+	if (parent) {
+		parent.children.push(element);
 	} else { //There aren't parent elements
 		this.dom.push(element);
 	}
@@ -69,24 +85,10 @@ DomHandler.prototype.onopentag = function(name, attribs){
 		name: name,
 		attribs: attribs,
 		children: [],
-		prev: null,
-		next: null,
 		parent: lastTag || null
 	};
 
-	if(lastTag){
-		var idx = lastTag.children.length;
-		while(idx > 0){
-			if(ElementType.isTag(lastTag.children[--idx])){
-				element.prev = lastTag.children[idx];
-				lastTag.children[idx].next = element;
-				break;
-			}
-		}
-		lastTag.children.push(element);
-	} else {
-		this.dom.push(element);
-	}
+	this._addDomElement(element);
 
 	this._tagStack.push(element);
 };
