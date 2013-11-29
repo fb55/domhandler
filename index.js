@@ -53,13 +53,8 @@ DomHandler.prototype.onclosetag = function(name){
 
 DomHandler.prototype._addDomElement = function(element){
 	var parent = this._tagStack[this._tagStack.length - 1];
-	var previousSibling;
-
-	if (parent) {
-		previousSibling = parent.children[parent.children.length - 1];
-	} else {
-		previousSibling = this.dom[this.dom.length - 1];
-	}
+	var siblings = parent ? parent.children : this.dom;
+	var previousSibling = siblings[siblings.length - 1];
 
 	element.next = null;
 
