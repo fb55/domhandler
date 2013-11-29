@@ -65,13 +65,8 @@ DomHandler.prototype._addDomElement = function(element){
 		element.prev = null;
 	}
 
-	if(parent) {
-		parent.children.push(element);
-		element.parent = parent;
-	} else { //There aren't parent elements
-		this.dom.push(element);
-		element.parent = null;
-	}
+	siblings.push(element);
+	element.parent = parent || null
 };
 
 DomHandler.prototype.onopentag = function(name, attribs){
