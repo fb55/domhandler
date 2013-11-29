@@ -65,7 +65,7 @@ DomHandler.prototype._addDomElement = function(element){
 		element.prev = null;
 	}
 
-	if (parent) {
+	if(parent) {
 		parent.children.push(element);
 		element.parent = parent;
 	} else { //There aren't parent elements
