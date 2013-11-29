@@ -56,7 +56,7 @@ DomHandler.prototype._addDomElement = function(element){
 	var previousSibling;
 
 	if (parent) {
-		previousSibling = parent.children[parent.length - 1];
+		previousSibling = parent.children[parent.children.length - 1];
 	} else {
 		previousSibling = this.dom[this.dom.length - 1];
 	}
