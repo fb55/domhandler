@@ -52,13 +52,21 @@ DomHandler.prototype.onclosetag = function(name){
 };
 
 DomHandler.prototype._addDomElement = function(element){
-	var lastTag = this._tagStack[this._tagStack.length - 1];
+	var parent = this._tagStack[this._tagStack.length - 1];
+	var siblings = parent ? parent.children : this.dom;
+	var previousSibling = siblings[siblings.length - 1];
 
-	if(lastTag){
-		lastTag.children.push(element);
-	} else { //There aren't parent elements
-		this.dom.push(element);
+	element.next = null;
+
+	if(previousSibling){
+		element.prev = previousSibling;
+		previousSibling.next = element;
+	} else {
+		element.prev = null;
 	}
+
+	siblings.push(element);
+	element.parent = parent || null
 };
 
 DomHandler.prototype.onopentag = function(name, attribs){
@@ -68,25 +76,10 @@ DomHandler.prototype.onopentag = function(name, attribs){
 		type: name === "script" ? ElementType.Script : name === "style" ? ElementType.Style : ElementType.Tag,
 		name: name,
 		attribs: attribs,
-		children: [],
-		prev: null,
-		next: null,
-		parent: lastTag || null
+		children: []
 	};
 
-	if(lastTag){
-		var idx = lastTag.children.length;
-		while(idx > 0){
-			if(ElementType.isTag(lastTag.children[--idx])){
-				element.prev = lastTag.children[idx];
-				lastTag.children[idx].next = element;
-				break;
-			}
-		}
-		lastTag.children.push(element);
-	} else {
-		this.dom.push(element);
-	}
+	this._addDomElement(element);
 
 	this._tagStack.push(element);
 };
