@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha -R list"
+    "test": "jshint index.js test/ && mocha -R list"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,18 @@
   },
   "devDependencies": {
     "htmlparser2": "3.2",
-    "mocha": "1"
+    "mocha": "1",
+    "jshint": "~2.3.0"
   },
-  "author": "Felix Boehm <me@feedic.com>"
+  "author": "Felix Boehm <me@feedic.com>",
+  "jshintConfig": {
+    "quotmark": "double",
+    "trailing": true,
+    "unused": true,
+    "undef": true,
+    "node": true,
+    "globals": {
+      "it": true
+    }
+  }
 }

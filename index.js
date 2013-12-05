@@ -45,7 +45,7 @@ DomHandler.prototype.onerror = function(error){
 	}
 };
 
-DomHandler.prototype.onclosetag = function(name){
+DomHandler.prototype.onclosetag = function(){
 	//if(this._tagStack.pop().name !== name) this._handleCallback(Error("Tagname didn't match!"));
 	var elem = this._tagStack.pop();
 	if(this._elementCB) this._elementCB(elem);
@@ -70,8 +70,6 @@ DomHandler.prototype._addDomElement = function(element){
 };
 
 DomHandler.prototype.onopentag = function(name, attribs){
-	var lastTag = this._tagStack[this._tagStack.length - 1];
-
 	var element = {
 		type: name === "script" ? ElementType.Script : name === "style" ? ElementType.Style : ElementType.Tag,
 		name: name,
