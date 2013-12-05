@@ -94,7 +94,7 @@ var domLvl1 = {
 	parentNode: 'parent',
 	previousSibling: 'prev',
 	nextSibling: 'next',
-	nodeValue: "data"
+	nodeValue: 'data'
 };
 var nodeTypes = {
 	element: 1,
