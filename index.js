@@ -89,12 +89,12 @@ var NodePrototype = {
 	}
 };
 var domLvl1 = {
-	tagName: 'name',
-	childNodes: 'children',
-	parentNode: 'parent',
-	previousSibling: 'prev',
-	nextSibling: 'next',
-	nodeValue: 'data'
+	tagName: "name",
+	childNodes: "children",
+	parentNode: "parent",
+	previousSibling: "prev",
+	nextSibling: "next",
+	nodeValue: "data"
 };
 var nodeTypes = {
 	element: 1,

@@ -32,6 +32,7 @@
     "unused": true,
     "undef": true,
     "node": true,
+    "proto": true,
     "globals": {
       "it": true
     }
