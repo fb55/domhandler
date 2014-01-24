@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/fb55/domhandler.git"
+    "url": "git://github.com/fb55/DomHandler.git"
   },
   "keywords": [
     "dom",
