@@ -45,9 +45,10 @@ DomHandler.prototype.onerror = function(error){
 	}
 };
 
-DomHandler.prototype.onclosetag = function(){
+DomHandler.prototype.onclosetag = function(name, endIndex){
 	//if(this._tagStack.pop().name !== name) this._handleCallback(Error("Tagname didn't match!"));
 	var elem = this._tagStack.pop();
+	elem._endIndex = endIndex;
 	if(this._elementCB) this._elementCB(elem);
 };
 
@@ -115,12 +116,15 @@ Object.keys(domLvl1).forEach(function(key) {
 	});
 });
 
-DomHandler.prototype.onopentag = function(name, attribs){
+DomHandler.prototype.onopentag = function(name, attribs, tagStart){
 	var element = {
 		type: name === "script" ? ElementType.Script : name === "style" ? ElementType.Style : ElementType.Tag,
 		name: name,
 		attribs: attribs,
-		children: []
+		children: [],
+
+		_startIndex: tagStart,
+		_endIndex: tagStart
 	};
 
 	this._addDomElement(element);
