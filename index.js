@@ -1,6 +1,7 @@
 var ElementType = require("domelementtype");
 
 var re_whitespace = /\s+/g;
+var NodePrototype = require("./lib/node");
 var ElementPrototype = require("./lib/element");
 
 function DomHandler(callback, options, elementCB){
@@ -60,7 +61,7 @@ DomHandler.prototype._addDomElement = function(element){
 	element.next = null;
 
 	if (this._options.withDomLvl1) {
-		element.__proto__ = ElementPrototype;
+		element.__proto__ = element.type === "tag" ? ElementPrototype : NodePrototype;
 	}
 
 	if(previousSibling){
