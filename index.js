@@ -19,11 +19,17 @@ function DomHandler(callback, options, elementCB){
 	this.dom = [];
 	this._done = false;
 	this._tagStack = [];
+	this._parser = this._parser || null;
 }
 
 //default options
 var defaultOpts = {
-	normalizeWhitespace: false //Replace all whitespace with single spaces
+	normalizeWhitespace: false, //Replace all whitespace with single spaces
+	withStartIndices: false, //Add startIndex properties to nodes
+};
+
+DomHandler.prototype.onparserinit = function(parser){
+	this._parser = parser;
 };
 
 //Resets the handler back to starting state
@@ -35,6 +41,7 @@ DomHandler.prototype.onreset = function(){
 DomHandler.prototype.onend = function(){
 	if(this._done) return;
 	this._done = true;
+	this._parser = null;
 	this._handleCallback(null);
 };
 
@@ -59,6 +66,10 @@ DomHandler.prototype._addDomElement = function(element){
 	var previousSibling = siblings[siblings.length - 1];
 
 	element.next = null;
+
+	if(this._options.withStartIndices){
+		element.startIndex = this._parser.startIndex;
+	}
 
 	if (this._options.withDomLvl1) {
 		element.__proto__ = element.type === "tag" ? ElementPrototype : NodePrototype;

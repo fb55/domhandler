@@ -21,7 +21,7 @@
     "domelementtype": "1"
   },
   "devDependencies": {
-    "htmlparser2": "3.2",
+    "htmlparser2": "3.8",
     "mocha": "1",
     "jshint": "~2.3.0"
   },
