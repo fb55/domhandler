@@ -1,12 +1,14 @@
-#DOMHandler [![Build Status](https://secure.travis-ci.org/fb55/DomHandler.png)](http://travis-ci.org/fb55/DomHandler)
+#domhandler [![Build Status](https://travis-ci.org/fb55/domhandler.svg?branch=master)](https://travis-ci.org/fb55/domhandler)
 
-The DOM handler (formally known as DefaultHandler) creates a tree containing all nodes of a page. The tree may be manipulated using the DOMUtils library.
+The DOM handler (formally known as DefaultHandler) creates a tree containing all nodes of a page. The tree may be manipulated using the [domutils](https://github.com/fb55/domutils) library.
 
 ##Usage
 ```javascript
 var handler = new DomHandler([ <func> callback(err, dom), ] [ <obj> options ]);
 // var parser = new Parser(handler[, options]);
 ```
+
+Available options are described below.
 
 ##Example
 ```javascript
@@ -100,6 +102,12 @@ The following HTML will be used:
     }]
 }]
 ```
+
+##Option: withDomLvl1
+
+Adds DOM level 1 properties to all elements.
+
+<!-- TODO: description -->
 
 ##Option: withStartIndices
 Indicates whether a `startIndex` property will be added to nodes. When the parser is used in a non-streaming fashion, `startIndex` is an integer indicating the position of the start of the node in the document. The default value is "false".
