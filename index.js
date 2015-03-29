@@ -1,8 +1,8 @@
 var ElementType = require("domelementtype");
-
-var re_whitespace = /\s+/g;
 var NodePrototype = require("./lib/node");
 var ElementPrototype = require("./lib/element");
+
+var re_whitespace = /\s+/g;
 
 function DomHandler(callback, options, elementCB){
 	if(typeof callback === "object"){
@@ -42,6 +42,7 @@ DomHandler.prototype.onend = function(){
 	if(this._done) return;
 	this._done = true;
 	this._parser = null;
+	this._activeTextNode = null;
 	this._handleCallback(null);
 };
 
@@ -55,7 +56,7 @@ DomHandler.prototype.onerror = function(error){
 };
 
 DomHandler.prototype.onclosetag = function(){
-	//if(this._tagStack.pop().name !== name) this._handleCallback(Error("Tagname didn't match!"));
+	this._activeTextNode = null;
 	var elem = this._tagStack.pop();
 	if(this._elementCB) this._elementCB(elem);
 };
@@ -84,6 +85,7 @@ DomHandler.prototype._addDomElement = function(element){
 
 	siblings.push(element);
 	element.parent = parent || null;
+	this._activeTextNode = element.type === ElementType.Text ? element : null;
 };
 
 DomHandler.prototype.onopentag = function(name, attribs){
@@ -104,36 +106,17 @@ DomHandler.prototype.ontext = function(data){
 	//it's an alias for normalizeWhitespace
 	var normalize = this._options.normalizeWhitespace || this._options.ignoreWhitespace;
 
-	var lastTag;
-
-	if(!this._tagStack.length && this.dom.length && (lastTag = this.dom[this.dom.length-1]).type === ElementType.Text){
-		if(normalize){
-			lastTag.data = (lastTag.data + data).replace(re_whitespace, " ");
+	if (this._activeTextNode) {
+		if (normalize) {
+			this._activeTextNode.data = (this._activeTextNode.data + data).replace(re_whitespace, " ");
 		} else {
-			lastTag.data += data;
+			this._activeTextNode.data += data;
 		}
 	} else {
-		if(
-			this._tagStack.length &&
-			(lastTag = this._tagStack[this._tagStack.length - 1]) &&
-			(lastTag = lastTag.children[lastTag.children.length - 1]) &&
-			lastTag.type === ElementType.Text
-		){
-			if(normalize){
-				lastTag.data = (lastTag.data + data).replace(re_whitespace, " ");
-			} else {
-				lastTag.data += data;
-			}
-		} else {
-			if(normalize){
-				data = data.replace(re_whitespace, " ");
-			}
-
-			this._addDomElement({
-				data: data,
-				type: ElementType.Text
-			});
-		}
+		this._addDomElement({
+			data: normalize ? data.replace(re_whitespace, " ") : data,
+			type: ElementType.Text
+		});
 	}
 };
 
