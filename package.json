@@ -26,6 +26,7 @@
     "jshint": "~2.3.0"
   },
   "author": "Felix Boehm <me@feedic.com>",
+  "license": "BSD-2-Clause",
   "jshintConfig": {
     "quotmark": "double",
     "trailing": true,
