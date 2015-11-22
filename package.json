@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "htmlparser2": "3.8",
-    "mocha": "1",
-    "jshint": "~2.3.0"
+    "mocha": "2.3.4",
+    "jshint": "~2.9.1-rc1"
   },
   "author": "Felix Boehm <me@feedic.com>",
   "license": "BSD-2-Clause",
