@@ -60,6 +60,25 @@ DomHandler.prototype.onclosetag = function(){
 	if(this._elementCB) this._elementCB(elem);
 };
 
+DomHandler.prototype._createDomElement = function(properties){
+	if (!this._options.withDomLvl1) return properties;
+
+	var element;
+	if (properties.type === "tag") {
+		element = Object.create(ElementPrototype);
+	} else {
+		element = Object.create(NodePrototype);
+	}
+
+	for (var key in properties) {
+		if (properties.hasOwnProperty(key)) {
+			element[key] = properties[key];
+		}
+	}
+
+	return element;
+};
+
 DomHandler.prototype._addDomElement = function(element){
 	var parent = this._tagStack[this._tagStack.length - 1];
 	var siblings = parent ? parent.children : this.dom;
@@ -69,10 +88,6 @@ DomHandler.prototype._addDomElement = function(element){
 
 	if(this._options.withStartIndices){
 		element.startIndex = this._parser.startIndex;
-	}
-
-	if (this._options.withDomLvl1) {
-		element.__proto__ = element.type === "tag" ? ElementPrototype : NodePrototype;
 	}
 
 	if(previousSibling){
@@ -87,12 +102,14 @@ DomHandler.prototype._addDomElement = function(element){
 };
 
 DomHandler.prototype.onopentag = function(name, attribs){
-	var element = {
+	var properties = {
 		type: name === "script" ? ElementType.Script : name === "style" ? ElementType.Style : ElementType.Tag,
 		name: name,
 		attribs: attribs,
 		children: []
 	};
+
+	var element = this._createDomElement(properties);
 
 	this._addDomElement(element);
 
@@ -129,10 +146,12 @@ DomHandler.prototype.ontext = function(data){
 				data = data.replace(re_whitespace, " ");
 			}
 
-			this._addDomElement({
+			var element = this._createDomElement({
 				data: data,
 				type: ElementType.Text
 			});
+
+			this._addDomElement(element);
 		}
 	}
 };
@@ -145,23 +164,27 @@ DomHandler.prototype.oncomment = function(data){
 		return;
 	}
 
-	var element = {
+	var properties = {
 		data: data,
 		type: ElementType.Comment
 	};
+
+	var element = this._createDomElement(properties);
 
 	this._addDomElement(element);
 	this._tagStack.push(element);
 };
 
 DomHandler.prototype.oncdatastart = function(){
-	var element = {
+	var properties = {
 		children: [{
 			data: "",
 			type: ElementType.Text
 		}],
 		type: ElementType.CDATA
 	};
+
+	var element = this._createDomElement(properties);
 
 	this._addDomElement(element);
 	this._tagStack.push(element);
@@ -172,11 +195,13 @@ DomHandler.prototype.oncommentend = DomHandler.prototype.oncdataend = function()
 };
 
 DomHandler.prototype.onprocessinginstruction = function(name, data){
-	this._addDomElement({
+	var element = this._createDomElement({
 		name: name,
 		data: data,
 		type: ElementType.Directive
 	});
+
+	this._addDomElement(element);
 };
 
 module.exports = DomHandler;
