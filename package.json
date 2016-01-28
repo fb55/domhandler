@@ -21,9 +21,9 @@
     "domelementtype": "1"
   },
   "devDependencies": {
-    "htmlparser2": "3.9.0",
-    "mocha": "2.4.4",
-    "jshint": "~2.9.1-rc1"
+    "htmlparser2": "^3.9.0",
+    "mocha": "^2.4.4",
+    "jshint": "^2.9.1"
   },
   "author": "Felix Boehm <me@feedic.com>",
   "license": "BSD-2-Clause",
