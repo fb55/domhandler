@@ -111,3 +111,6 @@ Adds DOM level 1 properties to all elements.
 
 ##Option: withStartIndices
 Indicates whether a `startIndex` property will be added to nodes. When the parser is used in a non-streaming fashion, `startIndex` is an integer indicating the position of the start of the node in the document. The default value is "false".
+
+##Option: withEndIndices
+Indicates whether a `endIndex` property will be added to nodes. When the parser is used in a non-streaming fashion, `endIndex` is an integer indicating the position of the end of the node in the document. The default value is "false".
