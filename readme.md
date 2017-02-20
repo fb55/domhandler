@@ -23,7 +23,7 @@ var handler = new htmlparser.DomHandler(function (error, dom) {
 });
 var parser = new htmlparser.Parser(handler);
 parser.write(rawHtml);
-parser.done();
+parser.end();
 ```
 
 Output:
