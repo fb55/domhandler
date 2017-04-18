@@ -1,8 +1,8 @@
-#domhandler [![Build Status](https://travis-ci.org/fb55/domhandler.svg?branch=master)](https://travis-ci.org/fb55/domhandler)
+# domhandler [![Build Status](https://travis-ci.org/fb55/domhandler.svg?branch=master)](https://travis-ci.org/fb55/domhandler)
 
 The DOM handler (formally known as DefaultHandler) creates a tree containing all nodes of a page. The tree may be manipulated using the [domutils](https://github.com/fb55/domutils) library.
 
-##Usage
+## Usage
 ```javascript
 var handler = new DomHandler([ <func> callback(err, dom), ] [ <obj> options ]);
 // var parser = new Parser(handler[, options]);
@@ -10,7 +10,7 @@ var handler = new DomHandler([ <func> callback(err, dom), ] [ <obj> options ]);
 
 Available options are described below.
 
-##Example
+## Example
 ```javascript
 var htmlparser = require("htmlparser2");
 var rawHtml = "Xyz <script language= javascript>var foo = '<<bar>>';< /  script><!--<!-- Waah! -- -->";
@@ -48,7 +48,7 @@ Output:
 }]
 ```
 
-##Option: normalizeWhitespace
+## Option: normalizeWhitespace
 Indicates whether the whitespace in text nodes should be normalized (= all whitespace should be replaced with single spaces). The default value is "false". 
 
 The following HTML will be used:
@@ -59,7 +59,7 @@ The following HTML will be used:
 <font>
 ```
 
-###Example: true
+### Example: true
 
 ```javascript
 [{
@@ -81,7 +81,7 @@ The following HTML will be used:
 }]
 ```
 
-###Example: false
+### Example: false
 
 ```javascript
 [{
@@ -103,14 +103,14 @@ The following HTML will be used:
 }]
 ```
 
-##Option: withDomLvl1
+## Option: withDomLvl1
 
 Adds DOM level 1 properties to all elements.
 
 <!-- TODO: description -->
 
-##Option: withStartIndices
+## Option: withStartIndices
 Indicates whether a `startIndex` property will be added to nodes. When the parser is used in a non-streaming fashion, `startIndex` is an integer indicating the position of the start of the node in the document. The default value is "false".
 
-##Option: withEndIndices
+## Option: withEndIndices
 Indicates whether a `endIndex` property will be added to nodes. When the parser is used in a non-streaming fashion, `endIndex` is an integer indicating the position of the end of the node in the document. The default value is "false".
