@@ -1,4 +1,4 @@
-import { DomApiAbstract, ElementType } from './dom-api-abstract';
+import { DomApiAbstract, ElementType, appendString } from './dom-api-abstract';
 
 export enum NodeTypes {
   element = 1,
@@ -8,34 +8,62 @@ export enum NodeTypes {
 }
 
 export function nodeTypeValue(key: string): number {
-  if (Object.keys(NodeTypes).find(nt => nt == key)) {
-    // 
-  }
-  return NodeTypes.element;
+  return (NodeTypes as any)[key] || NodeTypes.element;
 }
 
 export class DomApiLv1 implements DomApiAbstract {
   public type: ElementType;
   public tagName?: string;
   public nodeValue?: string;
-  public childNodes: DomApiLv1[];
+  public data?: string;
+  public nodeType: NodeTypes;
+  public children: DomApiLv1[];
+  public firstChild: DomApiLv1;
+  public lastChild: DomApiLv1;
+  public prev?: DomApiLv1;
+  public previousSibling?: DomApiLv1;
+  public next?: DomApiLv1;
+  public nextSibling?: DomApiLv1;
 
-  public get firstChild(): DomApiLv1 {
-    const children = this.childNodes;
-    return (children && children[0]) || null;
+  constructor(type: ElementType, children: DomApiLv1[]) {
+    this.type = type;
+    this.nodeType = nodeTypeValue(this.type);
+    if (children) {
+      this.children = children;
+    }
+    this.firstChild = null;
+    this.lastChild = null;
   }
 
-  public get lastChild(): DomApiLv1 {
-    const children = this.childNodes;
-    return (children && children[children.length - 1]) || null;
+  public _children(modify: boolean): DomApiLv1[] {
+    if (modify && !this.children) {
+      this.children = [];
+    }
+    return this.children;
   }
 
-  public get nodeType(): NodeTypes {
-    return nodeTypeValue(this.type);
+  public _firstChild(fc: DomApiLv1): void {
+    if (fc !== this) {
+      this.firstChild = fc;
+    } else {
+      this.firstChild = null;
+    }
   }
 
-  public _children(): DomApiLv1[] {
-    return this.childNodes;
+  public _lastChild(fc: DomApiLv1): void {
+    if (fc !== this) {
+      this.lastChild = fc;
+    } else {
+      this.lastChild = null;
+    }
+  }
+
+  public _data(str: string, normalize: boolean): void {
+    this.data = this.nodeValue = appendString(this.nodeValue, str, normalize);
+  }
+
+  public _lastChildren(): DomApiLv1 {
+    return this.children && this.children[this.children.length - 1];
   }
 
   public _endindex(): void {
@@ -50,12 +78,14 @@ export class DomApiLv1 implements DomApiAbstract {
     return;
   }
 
-  public _next(): void {
-    return;
+  public _next(p: DomApiLv1): void {
+    this.next = p;
+    this.nextSibling = p;
   }
 
-  public _prev(): void {
-    return;
+  public _prev(p: DomApiLv1): void {
+    this.prev = p;
+    this.previousSibling = p;
   }
 
 }

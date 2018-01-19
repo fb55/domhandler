@@ -4,11 +4,7 @@ import { DomApi, isTag } from './dom-api';
 import { TagLv1 } from './tag-lv1';
 import { TextLv1 } from './text-lv1';
 import { DomApiLv1 } from './dom-api-lv1';
-import { DomApiAbstract, ElementType } from './dom-api-abstract';
-
-const re_whitespace = /\s+/g;
-// var NodePrototype = require("./lib/node");
-// var ElementPrototype = require("./lib/element");
+import { DomApiAbstract, ElementType, appendString } from './dom-api-abstract';
 
 export declare type DomType = DomApi | DomApiLv1;
 
@@ -120,7 +116,7 @@ export class DomHandler {
 
   private _addDomElement(element: DomApiAbstract): void {
     const parent = this._tagStack[this._tagStack.length - 1];
-    const siblings = parent ? parent._children() : this.doms;
+    const siblings = parent ? parent._children(true) : this.doms;
     const previousSibling = siblings[siblings.length - 1];
 
     element._next(null);
@@ -135,12 +131,16 @@ export class DomHandler {
 
     if (previousSibling) {
       element._prev(previousSibling);
-      previousSibling.next = element;
+      previousSibling._next(element);
     } else {
       element._prev(null);
     }
     // console.log(element);
     siblings.push(element);
+    if (parent) {
+      parent._firstChild(siblings[0]);
+      parent._lastChild(siblings[siblings.length - 1]);
+    }
     element._parent(parent || null);
   }
 
@@ -152,7 +152,7 @@ export class DomHandler {
           (name === ElementType.Style ? ElementType.Style : ElementType.Tag),
         tagName: name,
         attribs: attribs,
-        childNodes: null
+        children: null
       });
     } else {
       properties = new Tag({
@@ -176,35 +176,25 @@ export class DomHandler {
 
     let lastTag: DomApiAbstract; // = this.doms[this.doms.length - 1];
     // console.log(lastTag, data);
-    if (!this._tagStack.length && this.doms.length > 0) {
+    if (this._tagStack.length == 0 && this.doms.length > 0) {
       lastTag = this.doms[this.doms.length - 1];
-      if (lastTag instanceof Text && lastTag.type === ElementType.Text) {
-        if (normalize) {
-          lastTag.data = (lastTag.data + data).replace(re_whitespace, ' ');
-        } else {
-          lastTag.data += data;
-        }
+      if (lastTag.type === ElementType.Text) {
+        lastTag._data(data, normalize);
         return;
       }
     }
     if (this._tagStack.length > 0) {
       lastTag = this._tagStack[this._tagStack.length - 1];
       if (lastTag) {
-        lastTag = lastTag._children()[lastTag._children.length - 1];
+        const children = lastTag._children(false) || [];
+        lastTag = children[children.length - 1];
       }
     }
-    if (lastTag instanceof Text && lastTag.type === ElementType.Text) {
-      if (normalize) {
-        lastTag.data = (lastTag.data + data).replace(re_whitespace, ' ');
-      } else {
-        lastTag.data += data;
-      }
+    if (lastTag && lastTag.type === ElementType.Text) {
+      lastTag._data(data, normalize);
     } else {
-      if (normalize) {
-        data = data.replace(re_whitespace, ' ');
-      }
       const element = this._createDomElement({
-        data: data,
+        data: appendString('', data, normalize),
         type: ElementType.Text
       });
       this._addDomElement(element);

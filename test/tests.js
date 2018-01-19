@@ -5,9 +5,12 @@ var fs = require("fs"),
     Parser = require("htmlparser2").Parser;
 
 var Handler;
-if (process.argv.includes('typed')) {
+var impl;
+if (process.argv.includes("typed")) {
+  impl = "typed";
   Handler = require("../dist/dom-handler").DomHandler;
 } else {
+  impl = "plain";
   Handler = require("../");
 }
 
@@ -23,7 +26,7 @@ fs
 })
 .map(require)
 .forEach(function(test){
-	it(test.name, function(){
+	it([impl, test.name].join(" "), function(){
 		var expected = test.expected;
 
 		var handler = new Handler(function(err, actual){
@@ -60,7 +63,7 @@ function compare(expected, result){
 		assert.strictEqual(expected, result, "result doesn't equal expected");
 	} else {
 		for(var prop in expected){
-			assert.ok(prop in result, "result didn't contain property " + prop);
+			assert.ok(prop in result, "result didn't contain property [" + prop + "]");
 			compare(expected[prop], result[prop]);
 		}
 	}

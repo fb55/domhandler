@@ -1,18 +1,4 @@
-import { DomApiAbstract, ElementType } from './dom-api-abstract';
-
-export enum NodeTypes {
-  element = 1,
-  text = 3,
-  cdata = 4,
-  comment = 8
-}
-
-export function nodeTypeValue(key: string): number {
-  if (Object.keys(NodeTypes).find(nt => nt == key)) {
-    //
-  }
-  return NodeTypes.element;
-}
+import { DomApiAbstract, ElementType, appendString } from './dom-api-abstract';
 
 export function isTag(type: string): boolean {
   return type === ElementType.Tag ||
@@ -21,14 +7,24 @@ export function isTag(type: string): boolean {
 }
 
 export abstract class DomApi implements DomApiAbstract {
-  public type: ElementType;
+  public readonly type: ElementType;
   public name?: string;
   public next?: DomApi;
   public prev?: DomApi;
   public parent?: DomApi;
   public startIndex?: number;
   public endIndex?: number;
-  public children?: DomApi[];
+  public children: DomApi[];
+  public data: string;
+
+  constructor(type: ElementType, children: DomApi[]) {
+    this.type = type;
+    this.children = children;
+  }
+
+  public _data(str: string, normalize: boolean): void {
+    this.data = appendString(this.data, str, normalize);
+  }
 
   public _endindex(idx: number): void {
     this.endIndex = idx;
@@ -50,7 +46,14 @@ export abstract class DomApi implements DomApiAbstract {
     this.parent = idx;
   }
 
-  public _children(): DomApi[] {
+  public _children(modify: boolean): DomApi[] {
     return this.children;
+  }
+
+  public _lastChild(fc: DomApi): void {
+    /* */
+  }
+  public _firstChild(fc: DomApi): void {
+    /* */
   }
 }

@@ -2,7 +2,7 @@
 // DOM-Level-1-compliant structure.
 
 import { ElementType } from './dom-api-abstract';
-import { DomApi, NodeTypes, nodeTypeValue } from './dom-api';
+import { DomApi } from './dom-api';
 // import { Tag } from './tr';
 
 // export enum domLvl1 {
@@ -35,10 +35,8 @@ export class Tag extends DomApi {
   private attribs: any; // Map<string, any>;
 
   constructor(np: NodeParam) {
-    super();
-    this.type = np.type;
+    super(np.type, np.children || []);
     this.name = np.name;
-    this.children = np.children || [];
     this.attribs = {}; // new Map<string, any>();
     for (let key in np.attribs) {
       if (np.attribs.hasOwnProperty(key)) {

@@ -1,7 +1,7 @@
 // This object will be used as the prototype for Nodes when creating a
 // DOM-Level-1-compliant structure.
 import { ElementType } from './dom-api-abstract';
-import { NodeTypes, nodeTypeValue, DomApiLv1 } from './dom-api-lv1';
+import { DomApiLv1 } from './dom-api-lv1';
 // import { Tag } from './tr';
 
 // export enum domLvl1 {
@@ -23,21 +23,22 @@ export interface NodeParamLv1 {
   type: ElementType;
   tagName: string;
   attribs: any;
-  childNodes: DomApiLv1[];
+  children: DomApiLv1[];
 }
 
 export class TagLv1 extends DomApiLv1 {
   public readonly type: ElementType;
   public readonly name: string;
-  public readonly childNodes: DomApiLv1[];
+  // public readonly childNodes: DomApiLv1[];
 
   private attribs: any; // Map<string, any>;
 
   constructor(np: NodeParamLv1) {
-    super();
-    this.type = np.type;
+    super(np.type, np.children || null);
     this.name = np.tagName;
-    this.childNodes = np.childNodes || [];
+    this.tagName = np.tagName;
+    this.nodeValue = null;
+
     this.attribs = {}; // new Map<string, any>();
     for (let key in np.attribs) {
       if (np.attribs.hasOwnProperty(key)) {

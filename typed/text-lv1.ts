@@ -29,13 +29,10 @@ export class TextLv1 extends DomApiLv1 {
   public readonly firstChild: DomApiLv1;
   public readonly lastChild: DomApiLv1;
 
-  private attribs?: any;
-
   constructor(props: any) {
-    super();
-    this.type = props.type;
-    this.childNodes = props.childNodes || null;
-    this.tagName = props.tagName;
-    this.nodeValue = props.nodeValue;
+    super(props.type, props.children || null);
+    this.tagName = props.tagName || null;
+    this._data(props.nodeValue || props.data, false);
+    this.childNodes = null;
   }
 }
