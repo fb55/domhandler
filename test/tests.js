@@ -2,8 +2,15 @@ var fs = require("fs"),
     path = require("path"),
     assert = require("assert"),
     util = require("util"),
-    Parser = require("htmlparser2").Parser,
-    Handler = require("../");
+    Parser = require("htmlparser2").Parser;
+
+var Handler;
+if (process.argv.includes('typed')) {
+  Handler = require("../dist/dom-handler").DomHandler;
+} else {
+  Handler = require("../");
+}
+
 
 var basePath = path.resolve(__dirname, "cases"),
     inspectOpts = { showHidden: true, depth: null };
