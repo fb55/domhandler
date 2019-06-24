@@ -114,3 +114,15 @@ Indicates whether a `startIndex` property will be added to nodes. When the parse
 
 ## Option: withEndIndices
 Indicates whether a `endIndex` property will be added to nodes. When the parser is used in a non-streaming fashion, `endIndex` is an integer indicating the position of the end of the node in the document. The default value is "false".
+
+---
+
+License: BSD-2-Clause
+
+[Get supported domhandler with the Tidelift Subscription](https://tidelift.com/subscription/pkg/npm-domhandler?utm_source=npm-domhandler&utm_medium=referral&utm_campaign=readme)
+
+## Security contact information
+
+To report a security vulnerability, please use the [Tidelift security contact](https://tidelift.com/security).
+Tidelift will coordinate the fix and disclosure.
+      
