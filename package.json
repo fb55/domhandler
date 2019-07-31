@@ -18,7 +18,7 @@
     "htmlparser2"
   ],
   "dependencies": {
-    "domelementtype": "1"
+    "domelementtype": "2"
   },
   "devDependencies": {
     "htmlparser2": "^3.9.0",
