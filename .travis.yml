@@ -5,4 +5,4 @@ node_js:
 matrix:
     fast_finish: true
 
-script: npm run coveralls
+script: npm run coverage
