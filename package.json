@@ -1,6 +1,6 @@
 {
     "name": "domhandler",
-    "version": "2.4.2",
+    "version": "3.0.0",
     "description": "Handler for htmlparser2 that turns pages into a dom",
     "main": "lib/index.js",
     "scripts": {
