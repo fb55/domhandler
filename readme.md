@@ -19,7 +19,7 @@ const { Parser } = require("htmlparser2");
 const { DomHandler } = require("domhandler");
 const rawHtml =
     "Xyz <script language= javascript>var foo = '<<bar>>';< /  script><!--<!-- Waah! -- -->";
-const handler = new htmlparser.DomHandler(function(error, dom) {
+const handler = new DomHandler(function(error, dom) {
     if (error) {
         // Handle error
     } else {
