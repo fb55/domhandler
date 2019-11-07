@@ -48,7 +48,7 @@ Output:
         },
         children: [
             {
-                data: "const foo = '<bar>';<",
+                data: "var foo = '<bar>';<",
                 type: "text"
             }
         ]
