@@ -28,7 +28,7 @@
     "devDependencies": {
         "@types/htmlparser2": "^3.10.1",
         "@types/jest": "^24.0.16",
-        "@types/node": "^12.6.8",
+        "@types/node": "^13.7.1",
         "@typescript-eslint/eslint-plugin": "^1.13.0",
         "@typescript-eslint/parser": "^1.13.0",
         "coveralls": "^3.0.5",
