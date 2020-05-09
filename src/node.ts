@@ -7,7 +7,7 @@ const nodeTypes = new Map<ElementType, number>([
     [ElementType.Directive, 1],
     [ElementType.Text, 3],
     [ElementType.CDATA, 4],
-    [ElementType.Comment, 8]
+    [ElementType.Comment, 8],
 ]);
 
 // This object will be used as the prototype for Nodes when creating a
@@ -36,12 +36,12 @@ export class Node {
 
     // Read-only aliases
     get nodeType(): number {
-        return nodeTypes.get(this.type) || 1;
+        return nodeTypes.get(this.type) ?? 1;
     }
 
     // Read-write aliases for properties
     get parentNode(): NodeWithChildren | null {
-        return this.parent || null;
+        return this.parent;
     }
 
     set parentNode(parent: NodeWithChildren | null) {
@@ -49,7 +49,7 @@ export class Node {
     }
 
     get previousSibling(): Node | null {
-        return this.prev || null;
+        return this.prev;
     }
 
     set previousSibling(prev: Node | null) {
@@ -57,7 +57,7 @@ export class Node {
     }
 
     get nextSibling(): Node | null {
-        return this.next || null;
+        return this.next;
     }
 
     set nextSibling(next: Node | null) {
@@ -112,11 +112,13 @@ export class NodeWithChildren extends Node {
 
     // Aliases
     get firstChild(): Node | null {
-        return this.children[0] || null;
+        return this.children[0] ?? null;
     }
 
     get lastChild(): Node | null {
-        return this.children[this.children.length - 1] || null;
+        return this.children.length > 0
+            ? this.children[this.children.length - 1]
+            : null;
     }
 
     get childNodes(): Node[] {

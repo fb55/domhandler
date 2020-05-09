@@ -7,10 +7,10 @@ const basePath = resolve(__dirname, "__fixtures__");
 
 describe("DomHandler", () => {
     readdirSync(basePath)
-        .filter(name => name.endsWith(".json")) // Only allow .json files
-        .map(name => resolve(basePath, name))
+        .filter((name) => name.endsWith(".json")) // Only allow .json files
+        .map((name) => resolve(basePath, name))
         .map(require)
-        .forEach(fixture =>
+        .forEach((fixture) =>
             test(fixture.name, () => {
                 const { expected, html: data } = fixture;
 

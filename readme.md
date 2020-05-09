@@ -19,7 +19,7 @@ const { Parser } = require("htmlparser2");
 const { DomHandler } = require("domhandler");
 const rawHtml =
     "Xyz <script language= javascript>var foo = '<<bar>>';< /  script><!--<!-- Waah! -- -->";
-const handler = new DomHandler(function(error, dom) {
+const handler = new DomHandler(function (error, dom) {
     if (error) {
         // Handle error
     } else {
@@ -38,25 +38,25 @@ Output:
 [
     {
         data: "Xyz ",
-        type: "text"
+        type: "text",
     },
     {
         type: "script",
         name: "script",
         attribs: {
-            language: "javascript"
+            language: "javascript",
         },
         children: [
             {
                 data: "var foo = '<bar>';<",
-                type: "text"
-            }
-        ]
+                type: "text",
+            },
+        ],
     },
     {
         data: "<!-- Waah! -- ",
-        type: "comment"
-    }
+        type: "comment",
+    },
 ];
 ```
 
@@ -81,22 +81,22 @@ For the following examples, this HTML will be used:
         children: [
             {
                 data: " ",
-                type: "text"
+                type: "text",
             },
             {
                 type: "tag",
-                name: "br"
+                name: "br",
             },
             {
                 data: "this is the text ",
-                type: "text"
+                type: "text",
             },
             {
                 type: "tag",
-                name: "font"
-            }
-        ]
-    }
+                name: "font",
+            },
+        ],
+    },
 ];
 ```
 
@@ -110,22 +110,22 @@ For the following examples, this HTML will be used:
         children: [
             {
                 data: "\n\t",
-                type: "text"
+                type: "text",
             },
             {
                 type: "tag",
-                name: "br"
+                name: "br",
             },
             {
                 data: "this is the text\n",
-                type: "text"
+                type: "text",
             },
             {
                 type: "tag",
-                name: "font"
-            }
-        ]
-    }
+                name: "font",
+            },
+        ],
+    },
 ];
 ```
 

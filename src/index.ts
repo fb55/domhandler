@@ -4,7 +4,7 @@ import {
     Element,
     DataNode,
     NodeWithChildren,
-    ProcessingInstruction
+    ProcessingInstruction,
 } from "./node";
 
 export { Node, NodeWithChildren, DataNode, Element };
@@ -39,7 +39,7 @@ export interface DomHandlerOptions {
 const defaultOpts: DomHandlerOptions = {
     normalizeWhitespace: false,
     withStartIndices: false,
-    withEndIndices: false
+    withEndIndices: false,
 };
 
 interface ParserInterface {
@@ -55,16 +55,16 @@ export class DomHandler {
     public dom: Node[] = [];
 
     /** Called once parsing has completed. */
-    private _callback: Callback | null;
+    private readonly _callback: Callback | null;
 
     /** Settings for the handler. */
-    private _options: DomHandlerOptions;
+    private readonly _options: DomHandlerOptions;
 
     /** Callback whenever a tag is closed. */
-    private _elementCB: ElementCallback | null;
+    private readonly _elementCB: ElementCallback | null;
 
     /** Indicated whether parsing has been completed. */
-    private _done: boolean = false;
+    private _done = false;
 
     /** Stack of open tags. */
     private _tagStack: Element[] = [];
@@ -97,9 +97,9 @@ export class DomHandler {
             callback = undefined;
         }
 
-        this._callback = callback || null;
-        this._options = options || defaultOpts;
-        this._elementCB = elementCB || null;
+        this._callback = callback ?? null;
+        this._options = options ?? defaultOpts;
+        this._elementCB = elementCB ?? null;
     }
 
     public onparserinit(parser: ParserInterface): void {
@@ -112,7 +112,7 @@ export class DomHandler {
         this._done = false;
         this._tagStack = [];
         this._lastNode = null;
-        this._parser = this._parser || null;
+        this._parser = this._parser ?? null;
     }
 
     // Signals the handler that parsing is done
