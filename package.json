@@ -3,6 +3,7 @@
     "version": "3.0.0",
     "description": "Handler for htmlparser2 that turns pages into a dom",
     "main": "lib/index.js",
+    "sideEffects": false,
     "scripts": {
         "test": "jest --coverage && npm run lint",
         "coverage": "cat coverage/lcov.info | coveralls",
