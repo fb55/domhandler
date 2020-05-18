@@ -37,7 +37,7 @@
         "htmlparser2": "^4.1.0",
         "jest": "^26.0.1",
         "prettier": "^2.0.5",
-        "ts-jest": "^25.2.1",
+        "ts-jest": "^26.0.0",
         "typescript": "^3.5.3"
     },
     "author": "Felix Boehm <me@feedic.com>",
