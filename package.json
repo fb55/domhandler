@@ -7,7 +7,7 @@
     "scripts": {
         "test": "jest --coverage && npm run lint",
         "coverage": "cat coverage/lcov.info | coveralls",
-        "lint": "eslint --ext=js,ts src",
+        "lint": "eslint src",
         "format": "prettier --write '**/*.{ts,md,json}'",
         "build": "tsc",
         "prepare": "npm run build"
@@ -27,14 +27,13 @@
         "domelementtype": "^2.0.1"
     },
     "devDependencies": {
-        "@types/jest": "^25.1.4",
+        "@types/jest": "^25.2.3",
         "@types/node": "^14.0.9",
-        "@typescript-eslint/eslint-plugin": "^2.31.0",
-        "@typescript-eslint/parser": "^2.31.0",
+        "@typescript-eslint/eslint-plugin": "^3.1.0",
+        "@typescript-eslint/parser": "^3.1.0",
         "coveralls": "^3.0.5",
-        "eslint": "^6.1.0",
+        "eslint": "^7.1.0",
         "eslint-config-prettier": "^6.0.0",
-        "eslint-config-xo-typescript": "^0.28.0",
         "htmlparser2": "^4.1.0",
         "jest": "^26.0.1",
         "prettier": "^2.0.5",

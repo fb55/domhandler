@@ -217,7 +217,7 @@ export class DomHandler {
         }
     }
 
-    protected addNode(node: Node) {
+    protected addNode(node: Node): void {
         const parent = this._tagStack[this._tagStack.length - 1];
         const siblings = parent ? parent.children : this.dom;
         const previousSibling = siblings[siblings.length - 1];

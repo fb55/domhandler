@@ -2,7 +2,7 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "eslint-config-xo-typescript",
+        "plugin:@typescript-eslint/recommended",
         "prettier",
         "prettier/@typescript-eslint"
     ],
@@ -21,7 +21,6 @@
         "object-shorthand": 2,
 
         "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/prefer-readonly-parameter-types": 0,
         "@typescript-eslint/no-use-before-define": [2, { "functions": false }]
     }
 }
