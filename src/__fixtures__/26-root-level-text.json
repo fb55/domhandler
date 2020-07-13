@@ -1,0 +1,22 @@
+{
+    "name": "Root-level text",
+    "options": {},
+    "html": "<em>hello</em> world",
+    "expected": [
+        {
+            "type": "tag",
+            "children": [
+                {
+                    "data": "hello",
+                    "type": "text"
+                }
+            ],
+            "name": "em",
+            "attribs": {}
+        },
+        {
+            "data": " world",
+            "type": "text"
+        }
+    ]
+}
