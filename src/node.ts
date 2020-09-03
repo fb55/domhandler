@@ -10,8 +10,10 @@ const nodeTypes = new Map<ElementType, number>([
     [ElementType.Comment, 8],
 ]);
 
-// This object will be used as the prototype for Nodes when creating a
-// DOM-Level-1-compliant structure.
+/**
+ * This object will be used as the prototype for Nodes when creating a
+ * DOM-Level-1-compliant structure.
+ */
 export class Node {
     /** Parent of the node */
     parent: NodeWithChildren | null = null;

@@ -12,25 +12,31 @@ export { Node, NodeWithChildren, DataNode, Element };
 const reWhitespace = /\s+/g;
 
 export interface DomHandlerOptions {
-    /***
-     * Indicates whether the whitespace in text nodes should be normalized
-     * (= all whitespace should be replaced with single spaces). The default value is "false".
+    /**
+     * All whitespace should be replaced with single spaces.
+     *
+     * **Note:** Enabling this might break your markup.
+     *
+     * @default false
+     * @deprecated
      */
     normalizeWhitespace?: boolean;
 
-    /***
-     * Indicates whether a startIndex property will be added to nodes.
-     * When the parser is used in a non-streaming fashion, startIndex is an integer
+    /**
+     * Add a `startIndex` property to nodes.
+     * When the parser is used in a non-streaming fashion, `startIndex` is an integer
      * indicating the position of the start of the node in the document.
-     * The default value is "false".
+     *
+     * @default false
      */
     withStartIndices?: boolean;
 
-    /***
-     * Indicates whether a endIndex property will be added to nodes.
-     * When the parser is used in a non-streaming fashion, endIndex is an integer
+    /**
+     * Add an `endIndex` property to nodes.
+     * When the parser is used in a non-streaming fashion, `endIndex` is an integer
      * indicating the position of the end of the node in the document.
-     * The default value is "false".
+     *
+     * @default false
      */
     withEndIndices?: boolean;
 }
@@ -76,8 +82,6 @@ export class DomHandler {
     private _parser: ParserInterface | null = null;
 
     /**
-     * Initiate a new DomHandler.
-     *
      * @param callback Called once parsing has completed.
      * @param options Settings for the handler.
      * @param elementCB Callback whenever a tag is closed.
@@ -130,7 +134,6 @@ export class DomHandler {
     public onclosetag(): void {
         this._lastNode = null;
 
-        // If(this._tagStack.pop().name !== name) this.handleCallback(Error("Tagname didn't match!"));
         const elem = this._tagStack.pop();
 
         if (!elem || !this._parser) {
@@ -218,9 +221,13 @@ export class DomHandler {
     }
 
     protected addNode(node: Node): void {
-        const parent = this._tagStack[this._tagStack.length - 1];
+        const parent = this._tagStack[this._tagStack.length - 1] as
+            | Element
+            | undefined;
         const siblings = parent ? parent.children : this.dom;
-        const previousSibling = siblings[siblings.length - 1];
+        const previousSibling = siblings[siblings.length - 1] as
+            | Node
+            | undefined;
 
         if (this._parser) {
             if (this._options.withStartIndices) {
