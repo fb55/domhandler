@@ -13,16 +13,6 @@ const reWhitespace = /\s+/g;
 
 export interface DomHandlerOptions {
     /**
-     * All whitespace should be replaced with single spaces.
-     *
-     * **Note:** Enabling this might break your markup.
-     *
-     * @default false
-     * @deprecated
-     */
-    normalizeWhitespace?: boolean;
-
-    /**
      * Add a `startIndex` property to nodes.
      * When the parser is used in a non-streaming fashion, `startIndex` is an integer
      * indicating the position of the start of the node in the document.
@@ -39,6 +29,16 @@ export interface DomHandlerOptions {
      * @default false
      */
     withEndIndices?: boolean;
+
+    /**
+     * Replace all whitespace with single spaces.
+     *
+     * **Note:** Enabling this might break your markup.
+     *
+     * @default false
+     * @deprecated
+     */
+    normalizeWhitespace?: boolean;
 }
 
 // Default options

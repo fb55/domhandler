@@ -1,7 +1,9 @@
 # domhandler [![Build Status](https://travis-ci.org/fb55/domhandler.svg?branch=master)](https://travis-ci.org/fb55/domhandler)
 
 The DOM handler creates a tree containing all nodes of a page.
-The tree may be manipulated using the [domutils](https://github.com/fb55/domutils) or [cheerio](https://github.com/cheeriojs/cheerio) libraries.
+The tree can be manipulated using the [domutils](https://github.com/fb55/domutils)
+or [cheerio](https://github.com/cheeriojs/cheerio) libraries and
+rendered using [dom-serializer](https://github.com/cheeriojs/dom-serializer) .
 
 ## Usage
 
@@ -60,10 +62,26 @@ Output:
 ];
 ```
 
-## Option: normalizeWhitespace
+## Option: `withStartIndices`
 
-Indicates whether the whitespace in text nodes should be normalized (= all whitespace should be replaced with single spaces).
+Add a `startIndex` property to nodes.
+When the parser is used in a non-streaming fashion, `startIndex` is an integer
+indicating the position of the start of the node in the document.
 The default value is `false`.
+
+## Option: `withEndIndices`
+
+Add an `endIndex` property to nodes.
+When the parser is used in a non-streaming fashion, `endIndex` is an integer
+indicating the position of the end of the node in the document.
+The default value is `false`.
+
+## Option: `normalizeWhitespace` _(deprecated)_
+
+Replace all whitespace with single spaces.
+The default value is `false`.
+
+**Note:** Enabling this might break your markup.
 
 For the following examples, this HTML will be used:
 
@@ -128,18 +146,6 @@ For the following examples, this HTML will be used:
     },
 ];
 ```
-
-## Option: withStartIndices
-
-Indicates whether a `startIndex` property will be added to nodes.
-When the parser is used in a non-streaming fashion, `startIndex` is an integer indicating the position of the start of the node in the document.
-The default value is `false`.
-
-## Option: withEndIndices
-
-Indicates whether a `endIndex` property will be added to nodes.
-When the parser is used in a non-streaming fashion, `endIndex` is an integer indicating the position of the end of the node in the document.
-The default value is `false`.
 
 ---
 
