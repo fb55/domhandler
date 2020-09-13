@@ -2,6 +2,9 @@
     "name": "domhandler",
     "version": "3.0.0",
     "description": "Handler for htmlparser2 that turns pages into a dom",
+    "author": "Felix Boehm <me@feedic.com>",
+    "funding": "https://github.com/fb55/domhandler?sponsor=1",
+    "license": "BSD-2-Clause",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "sideEffects": false,
@@ -18,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/fb55/DomHandler.git"
+        "url": "git://github.com/fb55/domhandler.git"
     },
     "keywords": [
         "dom",
@@ -44,8 +47,6 @@
         "ts-jest": "^26.1.0",
         "typescript": "^4.0.2"
     },
-    "author": "Felix Boehm <me@feedic.com>",
-    "license": "BSD-2-Clause",
     "jest": {
         "preset": "ts-jest",
         "testEnvironment": "node"
