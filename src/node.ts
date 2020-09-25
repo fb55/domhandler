@@ -89,6 +89,18 @@ export class DataNode extends Node {
     }
 }
 
+export class Text extends DataNode {
+    constructor(data: string) {
+        super(ElementType.Text, data);
+    }
+}
+
+export class Comment extends DataNode {
+    constructor(data: string) {
+        super(ElementType.Comment, data);
+    }
+}
+
 export class ProcessingInstruction extends DataNode {
     constructor(public name: string, data: string) {
         super(ElementType.Directive, data);
@@ -160,5 +172,12 @@ export class Element extends NodeWithChildren {
 
     set tagName(name: string) {
         this.name = name;
+    }
+
+    get attributes(): { name: string; value: string }[] {
+        return Object.keys(this.attribs).map((name) => ({
+            name,
+            value: this.attribs[name],
+        }));
     }
 }

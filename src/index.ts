@@ -3,6 +3,8 @@ import {
     Node,
     Element,
     DataNode,
+    Text,
+    Comment,
     NodeWithChildren,
     ProcessingInstruction,
 } from "./node";
@@ -172,7 +174,7 @@ export class DomHandler {
                 data = data.replace(reWhitespace, " ");
             }
 
-            const node = new DataNode(ElementType.Text, data);
+            const node = new Text(data);
             this.addNode(node);
             this._lastNode = node;
         }
@@ -184,7 +186,7 @@ export class DomHandler {
             return;
         }
 
-        const node = new DataNode(ElementType.Comment, data);
+        const node = new Comment(data);
         this.addNode(node);
         this._lastNode = node;
     }
