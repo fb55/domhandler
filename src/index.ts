@@ -9,7 +9,7 @@ import {
     ProcessingInstruction,
 } from "./node";
 
-export { Node, NodeWithChildren, DataNode, Element };
+export * from "./node";
 
 const reWhitespace = /\s+/g;
 
@@ -196,7 +196,7 @@ export class DomHandler {
     }
 
     public oncdatastart(): void {
-        const text = new DataNode(ElementType.Text, "");
+        const text = new Text("");
         const node = new NodeWithChildren(ElementType.CDATA, [text]);
 
         this.addNode(node);

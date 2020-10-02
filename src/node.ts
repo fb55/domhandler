@@ -65,11 +65,20 @@ export class Node {
     set nextSibling(next: Node | null) {
         this.next = next;
     }
+
+    /**
+     * Clone this node, and optionally its children.
+     *
+     * @param recursive Clone child nodes as well.
+     * @returns A clone of the node.
+     */
+    cloneNode(recursive = false): Node {
+        return cloneNode(this, recursive);
+    }
 }
 
 export class DataNode extends Node {
     /**
-     *
      * @param type The type of the node
      * @param data The content of the data node
      */
@@ -146,13 +155,14 @@ export class NodeWithChildren extends Node {
 
 export class Element extends NodeWithChildren {
     /**
-     *
-     * @param name Name of the tag, eg. `div`, `span`
-     * @param attribs Object mapping attribute names to attribute values
+     * @param name Name of the tag, eg. `div`, `span`.
+     * @param attribs Object mapping attribute names to attribute values.
+     * @param children Children of the node.
      */
     constructor(
         public name: string,
-        public attribs: { [name: string]: string }
+        public attribs: { [name: string]: string },
+        children: Node[] = []
     ) {
         super(
             name === "script"
@@ -160,7 +170,7 @@ export class Element extends NodeWithChildren {
                 : name === "style"
                 ? ElementType.Style
                 : ElementType.Tag,
-            []
+            children
         );
         this.attribs = attribs;
     }
@@ -179,5 +189,49 @@ export class Element extends NodeWithChildren {
             name,
             value: this.attribs[name],
         }));
+    }
+}
+
+/**
+ * Clone a node, and optionally its children.
+ *
+ * @param recursive Clone child nodes as well.
+ * @returns A clone of the node.
+ */
+export function cloneNode(node: Node, recursive = false): Node {
+    switch (node.type) {
+        case ElementType.Text:
+            return new Text((node as Text).data);
+        case ElementType.Directive: {
+            const instr = node as ProcessingInstruction;
+            return new ProcessingInstruction(instr.name, instr.data);
+        }
+        case ElementType.Comment:
+            return new Comment((node as Comment).data);
+        case ElementType.Tag:
+        case ElementType.Script:
+        case ElementType.Style: {
+            const elem = node as Element;
+            return new Element(
+                elem.name,
+                elem.attribs,
+                recursive
+                    ? elem.children.map((child) => cloneNode(child, true))
+                    : elem.children
+            );
+        }
+        case ElementType.CDATA: {
+            const cdata = node as NodeWithChildren;
+            return new NodeWithChildren(
+                ElementType.CDATA,
+                recursive
+                    ? cdata.children.map((child) => cloneNode(child, true))
+                    : cdata.children
+            );
+        }
+        case ElementType.Doctype: {
+            // This type isn't used yet.
+            throw new Error("Not implemented yet: ElementType.Doctype case");
+        }
     }
 }
