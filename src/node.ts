@@ -212,26 +212,32 @@ export function cloneNode(node: Node, recursive = false): Node {
         case ElementType.Script:
         case ElementType.Style: {
             const elem = node as Element;
-            return new Element(
-                elem.name,
-                elem.attribs,
-                recursive
-                    ? elem.children.map((child) => cloneNode(child, true))
-                    : elem.children
-            );
+            const children = recursive ? cloneChildren(elem.children) : [];
+            const clone = new Element(elem.name, { ...elem.attribs }, children);
+            children.forEach((child) => (child.parent = clone));
+            return clone;
         }
         case ElementType.CDATA: {
             const cdata = node as NodeWithChildren;
-            return new NodeWithChildren(
-                ElementType.CDATA,
-                recursive
-                    ? cdata.children.map((child) => cloneNode(child, true))
-                    : cdata.children
-            );
+            const children = recursive ? cloneChildren(cdata.children) : [];
+            const clone = new NodeWithChildren(ElementType.CDATA, children);
+            children.forEach((child) => (child.parent = clone));
+            return clone;
         }
         case ElementType.Doctype: {
             // This type isn't used yet.
             throw new Error("Not implemented yet: ElementType.Doctype case");
         }
     }
+}
+
+function cloneChildren(childs: Node[]): Node[] {
+    const children = childs.map((child) => cloneNode(child, true));
+
+    for (let i = 1; i < children.length; i++) {
+        children[i].prev = children[i - 1];
+        children[i - 1].next = children[i];
+    }
+
+    return children;
 }

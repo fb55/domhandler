@@ -21,29 +21,6 @@ describe("DomHandler", () => {
                 compare(result, fixture.expected);
             })
         );
-
-    it("Should serialize to Jest snapshot", () => {
-        const result = parse(
-            "<html><!-- A Comment --><title>The Title</title><body>Hello world<input disabled type=text></body></html>"
-        );
-        expect(result).toMatchInlineSnapshot(`
-            Array [
-              <html>
-                <!-- A Comment -->
-                <title>
-                  The Title
-                </title>
-                <body>
-                  Hello world
-                  <input
-                    disabled=""
-                    type="text"
-                  />
-                </body>
-              </html>,
-            ]
-        `);
-    });
 });
 
 function parse(
