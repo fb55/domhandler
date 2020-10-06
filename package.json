@@ -41,7 +41,7 @@
         "coveralls": "^3.0.5",
         "eslint": "^7.9.0",
         "eslint-config-prettier": "^6.0.0",
-        "htmlparser2": "^4.1.0",
+        "htmlparser2": "^5.0.0",
         "jest": "^26.0.1",
         "prettier": "^2.0.5",
         "ts-jest": "^26.1.0",
