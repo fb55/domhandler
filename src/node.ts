@@ -199,15 +199,20 @@ export class Element extends NodeWithChildren {
  * @returns A clone of the node.
  */
 export function cloneNode(node: Node, recursive = false): Node {
+    let result;
+
     switch (node.type) {
         case ElementType.Text:
-            return new Text((node as Text).data);
+            result = new Text((node as Text).data);
+            break;
         case ElementType.Directive: {
             const instr = node as ProcessingInstruction;
-            return new ProcessingInstruction(instr.name, instr.data);
+            result = new ProcessingInstruction(instr.name, instr.data);
+            break;
         }
         case ElementType.Comment:
-            return new Comment((node as Comment).data);
+            result = new Comment((node as Comment).data);
+            break;
         case ElementType.Tag:
         case ElementType.Script:
         case ElementType.Style: {
@@ -215,20 +220,26 @@ export function cloneNode(node: Node, recursive = false): Node {
             const children = recursive ? cloneChildren(elem.children) : [];
             const clone = new Element(elem.name, { ...elem.attribs }, children);
             children.forEach((child) => (child.parent = clone));
-            return clone;
+            result = clone;
+            break;
         }
         case ElementType.CDATA: {
             const cdata = node as NodeWithChildren;
             const children = recursive ? cloneChildren(cdata.children) : [];
             const clone = new NodeWithChildren(ElementType.CDATA, children);
             children.forEach((child) => (child.parent = clone));
-            return clone;
+            result = clone;
+            break;
         }
         case ElementType.Doctype: {
             // This type isn't used yet.
             throw new Error("Not implemented yet: ElementType.Doctype case");
         }
     }
+
+    result.startIndex = node.startIndex;
+    result.endIndex = node.endIndex;
+    return result;
 }
 
 function cloneChildren(childs: Node[]): Node[] {

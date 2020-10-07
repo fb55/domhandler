@@ -43,6 +43,16 @@ describe("Nodes", () => {
         expect(result.cloneNode(false)).not.toEqual(result);
         expect(result.cloneNode()).toHaveProperty("children", []);
     });
+
+    it("should clone startIndex and endIndex", () => {
+      const [result] = parse("<div foo=bar><div><div>", {
+          withStartIndices: true,
+          withEndIndices: true,
+      });
+      const clone = result.cloneNode(true);
+      expect(clone.startIndex).toBe(0);
+      expect(clone.endIndex).toBe(22);
+    });
 });
 
 type Options = DomHandlerOptions & ParserOptions;
