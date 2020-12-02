@@ -12,7 +12,6 @@
             "type": "tag",
             "name": "html",
             "attribs": {},
-            "parent": null,
             "children": [
                 {
                     "type": "tag",

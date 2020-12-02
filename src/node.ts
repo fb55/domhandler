@@ -124,6 +124,7 @@ export class NodeWithChildren extends Node {
      */
     constructor(
         type:
+            | ElementType.Root
             | ElementType.CDATA
             | ElementType.Script
             | ElementType.Style
@@ -223,10 +224,11 @@ export function cloneNode(node: Node, recursive = false): Node {
             result = clone;
             break;
         }
+        case ElementType.Root:
         case ElementType.CDATA: {
             const cdata = node as NodeWithChildren;
             const children = recursive ? cloneChildren(cdata.children) : [];
-            const clone = new NodeWithChildren(ElementType.CDATA, children);
+            const clone = new NodeWithChildren(node.type, children);
             children.forEach((child) => (child.parent = clone));
             result = clone;
             break;

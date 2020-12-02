@@ -3,7 +3,9 @@
     "version": "3.3.0",
     "description": "Handler for htmlparser2 that turns pages into a dom",
     "author": "Felix Boehm <me@feedic.com>",
-    "funding": "https://github.com/fb55/domhandler?sponsor=1",
+    "funding": {
+        "url": "https://github.com/fb55/domhandler?sponsor=1"
+    },
     "license": "BSD-2-Clause",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -31,7 +33,7 @@
         "node": ">= 4"
     },
     "dependencies": {
-        "domelementtype": "^2.0.1"
+        "domelementtype": "^2.1.0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.0",
