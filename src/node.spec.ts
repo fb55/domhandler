@@ -7,7 +7,7 @@ describe("Nodes", () => {
             "<html><!-- A Comment --><title>The Title</title><body>Hello world<input disabled type=text></body></html>"
         );
         expect(result).toMatchInlineSnapshot(`
-            NodeWithChildren {
+            Document {
               "children": Array [
                 <html>
                   <!-- A Comment -->

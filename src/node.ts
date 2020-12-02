@@ -154,6 +154,12 @@ export class NodeWithChildren extends Node {
     }
 }
 
+export class Document extends NodeWithChildren {
+    constructor(children: Node[]) {
+        super(ElementType.Root, children);
+    }
+}
+
 export class Element extends NodeWithChildren {
     /**
      * @param name Name of the tag, eg. `div`, `span`.
@@ -229,6 +235,14 @@ export function cloneNode(node: Node, recursive = false): Node {
             const cdata = node as NodeWithChildren;
             const children = recursive ? cloneChildren(cdata.children) : [];
             const clone = new NodeWithChildren(node.type, children);
+            children.forEach((child) => (child.parent = clone));
+            result = clone;
+            break;
+        }
+        case ElementType.Root: {
+            const doc = node as Document;
+            const children = recursive ? cloneChildren(doc.children) : [];
+            const clone = new Document(children);
             children.forEach((child) => (child.parent = clone));
             result = clone;
             break;

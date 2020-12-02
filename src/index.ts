@@ -6,6 +6,7 @@ import {
     Text,
     Comment,
     NodeWithChildren,
+    Document,
     ProcessingInstruction,
 } from "./node";
 
@@ -63,7 +64,7 @@ export class DomHandler {
     public dom: Node[] = [];
 
     /** The root element for the DOM */
-    public root = new NodeWithChildren(ElementType.Root, this.dom);
+    public root = new Document(this.dom);
 
     /** Called once parsing has completed. */
     private readonly callback: Callback | null;
@@ -118,7 +119,7 @@ export class DomHandler {
     // Resets the handler back to starting state
     public onreset(): void {
         this.dom = [];
-        this.root = new NodeWithChildren(ElementType.Root, this.dom);
+        this.root = new Document(this.dom);
         this.done = false;
         this.tagStack = [this.root];
         this.lastNode = null;
