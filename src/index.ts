@@ -66,25 +66,25 @@ export class DomHandler {
     public root = new NodeWithChildren(ElementType.Root, this.dom);
 
     /** Called once parsing has completed. */
-    private readonly _callback: Callback | null;
+    private readonly callback: Callback | null;
 
     /** Settings for the handler. */
-    private readonly _options: DomHandlerOptions;
+    private readonly options: DomHandlerOptions;
 
     /** Callback whenever a tag is closed. */
-    private readonly _elementCB: ElementCallback | null;
+    private readonly elementCB: ElementCallback | null;
 
     /** Indicated whether parsing has been completed. */
-    private _done = false;
+    private done = false;
 
     /** Stack of open tags. */
-    private _tagStack: NodeWithChildren[] = [this.root];
+    protected tagStack: NodeWithChildren[] = [this.root];
 
     /** A data node that is still being written to. */
-    private _lastNode: DataNode | null = null;
+    protected lastNode: DataNode | null = null;
 
     /** Reference to the parser instance. Used for location information. */
-    private _parser: ParserInterface | null = null;
+    private parser: ParserInterface | null = null;
 
     /**
      * @param callback Called once parsing has completed.
@@ -106,30 +106,30 @@ export class DomHandler {
             callback = undefined;
         }
 
-        this._callback = callback ?? null;
-        this._options = options ?? defaultOpts;
-        this._elementCB = elementCB ?? null;
+        this.callback = callback ?? null;
+        this.options = options ?? defaultOpts;
+        this.elementCB = elementCB ?? null;
     }
 
     public onparserinit(parser: ParserInterface): void {
-        this._parser = parser;
+        this.parser = parser;
     }
 
     // Resets the handler back to starting state
     public onreset(): void {
         this.dom = [];
         this.root = new NodeWithChildren(ElementType.Root, this.dom);
-        this._done = false;
-        this._tagStack = [this.root];
-        this._lastNode = null;
-        this._parser = this._parser ?? null;
+        this.done = false;
+        this.tagStack = [this.root];
+        this.lastNode = null;
+        this.parser = this.parser ?? null;
     }
 
     // Signals the handler that parsing is done
     public onend(): void {
-        if (this._done) return;
-        this._done = true;
-        this._parser = null;
+        if (this.done) return;
+        this.done = true;
+        this.parser = null;
         this.handleCallback(null);
     }
 
@@ -138,63 +138,60 @@ export class DomHandler {
     }
 
     public onclosetag(): void {
-        this._lastNode = null;
+        this.lastNode = null;
 
-        const elem = this._tagStack.pop() as Element;
+        const elem = this.tagStack.pop() as Element;
 
-        if (elem.type === ElementType.Root) throw new Error("woot");
-
-        if (this._options.withEndIndices) {
-            elem.endIndex = this._parser!.endIndex;
+        if (this.options.withEndIndices) {
+            elem.endIndex = this.parser!.endIndex;
         }
 
-        if (this._elementCB) this._elementCB(elem);
+        if (this.elementCB) this.elementCB(elem);
     }
 
     public onopentag(name: string, attribs: { [key: string]: string }): void {
         const element = new Element(name, attribs);
         this.addNode(element);
-        this._tagStack.push(element);
+        this.tagStack.push(element);
     }
 
     public ontext(data: string): void {
-        const normalize = this._options.normalizeWhitespace;
+        const { normalizeWhitespace } = this.options;
+        const { lastNode } = this;
 
-        const { _lastNode } = this;
-
-        if (_lastNode && _lastNode.type === ElementType.Text) {
-            if (normalize) {
-                _lastNode.data = (_lastNode.data + data).replace(
+        if (lastNode && lastNode.type === ElementType.Text) {
+            if (normalizeWhitespace) {
+                lastNode.data = (lastNode.data + data).replace(
                     reWhitespace,
                     " "
                 );
             } else {
-                _lastNode.data += data;
+                lastNode.data += data;
             }
         } else {
-            if (normalize) {
+            if (normalizeWhitespace) {
                 data = data.replace(reWhitespace, " ");
             }
 
             const node = new Text(data);
             this.addNode(node);
-            this._lastNode = node;
+            this.lastNode = node;
         }
     }
 
     public oncomment(data: string): void {
-        if (this._lastNode && this._lastNode.type === ElementType.Comment) {
-            this._lastNode.data += data;
+        if (this.lastNode && this.lastNode.type === ElementType.Comment) {
+            this.lastNode.data += data;
             return;
         }
 
         const node = new Comment(data);
         this.addNode(node);
-        this._lastNode = node;
+        this.lastNode = node;
     }
 
     public oncommentend(): void {
-        this._lastNode = null;
+        this.lastNode = null;
     }
 
     public oncdatastart(): void {
@@ -204,11 +201,11 @@ export class DomHandler {
         this.addNode(node);
 
         text.parent = node;
-        this._lastNode = text;
+        this.lastNode = text;
     }
 
     public oncdataend(): void {
-        this._lastNode = null;
+        this.lastNode = null;
     }
 
     public onprocessinginstruction(name: string, data: string): void {
@@ -217,32 +214,28 @@ export class DomHandler {
     }
 
     protected handleCallback(error: Error | null): void {
-        if (typeof this._callback === "function") {
-            this._callback(error, this.dom);
+        if (typeof this.callback === "function") {
+            this.callback(error, this.dom);
         } else if (error) {
             throw error;
         }
     }
 
     protected addNode(node: Node): void {
-        const parent = this._tagStack[this._tagStack.length - 1];
-        this._tagStack.length < 2 &&
-            (console.log(this._tagStack.length),
-            console.log(this._tagStack[0].type));
-        const siblings = parent.children;
-        const previousSibling = siblings[siblings.length - 1] as
+        const parent = this.tagStack[this.tagStack.length - 1];
+        const previousSibling = parent.children[parent.children.length - 1] as
             | Node
             | undefined;
 
-        if (this._options.withStartIndices) {
-            node.startIndex = this._parser!.startIndex;
+        if (this.options.withStartIndices) {
+            node.startIndex = this.parser!.startIndex;
         }
 
-        if (this._options.withEndIndices) {
-            node.endIndex = this._parser!.endIndex;
+        if (this.options.withEndIndices) {
+            node.endIndex = this.parser!.endIndex;
         }
 
-        siblings.push(node);
+        parent.children.push(node);
 
         if (previousSibling) {
             node.prev = previousSibling;
@@ -250,12 +243,12 @@ export class DomHandler {
         }
 
         node.parent = parent;
-        this._lastNode = null;
+        this.lastNode = null;
     }
 
     protected addDataNode(node: DataNode): void {
         this.addNode(node);
-        this._lastNode = node;
+        this.lastNode = node;
     }
 }
 
