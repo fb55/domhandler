@@ -8,6 +8,7 @@ const nodeTypes = new Map<ElementType, number>([
     [ElementType.Text, 3],
     [ElementType.CDATA, 4],
     [ElementType.Comment, 8],
+    [ElementType.Root, 9],
 ]);
 
 /**
@@ -114,11 +115,17 @@ export class ProcessingInstruction extends DataNode {
     constructor(public name: string, data: string) {
         super(ElementType.Directive, data);
     }
+
+    "x-name"?: string;
+    "x-publicId"?: string;
+    "x-systemId"?: string;
 }
 
+/**
+ * A `Node` that can have children.
+ */
 export class NodeWithChildren extends Node {
     /**
-     *
      * @param type Type of the node.
      * @param children Children of the node. Only certain node types can have children.
      */
@@ -158,8 +165,16 @@ export class Document extends NodeWithChildren {
     constructor(children: Node[]) {
         super(ElementType.Root, children);
     }
+
+    "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
 }
 
+interface Attribute {
+    name: string;
+    value: string;
+    namespace?: string;
+    prefix?: string;
+}
 export class Element extends NodeWithChildren {
     /**
      * @param name Name of the tag, eg. `div`, `span`.
@@ -191,12 +206,17 @@ export class Element extends NodeWithChildren {
         this.name = name;
     }
 
-    get attributes(): { name: string; value: string }[] {
+    get attributes(): Attribute[] {
         return Object.keys(this.attribs).map((name) => ({
             name,
             value: this.attribs[name],
+            namespace: this["x-attribsNamespace"]?.[name],
+            prefix: this["x-attribsPrefix"]?.[name],
         }));
     }
+
+    "x-attribsNamespace"?: Record<string, string>;
+    "x-attribsPrefix"?: Record<string, string>;
 }
 
 /**
@@ -215,6 +235,13 @@ export function cloneNode(node: Node, recursive = false): Node {
         case ElementType.Directive: {
             const instr = node as ProcessingInstruction;
             result = new ProcessingInstruction(instr.name, instr.data);
+
+            if (instr["x-name"] != null) {
+                result["x-name"] = instr["x-name"];
+                result["x-publicId"] = instr["x-publicId"];
+                result["x-systemId"] = instr["x-systemId"];
+            }
+
             break;
         }
         case ElementType.Comment:
@@ -227,10 +254,17 @@ export function cloneNode(node: Node, recursive = false): Node {
             const children = recursive ? cloneChildren(elem.children) : [];
             const clone = new Element(elem.name, { ...elem.attribs }, children);
             children.forEach((child) => (child.parent = clone));
+
+            if (elem["x-attribsNamespace"]) {
+                clone["x-attribsNamespace"] = { ...elem["x-attribsNamespace"] };
+            }
+            if (elem["x-attribsPrefix"]) {
+                clone["x-attribsPrefix"] = { ...elem["x-attribsPrefix"] };
+            }
+
             result = clone;
             break;
         }
-        case ElementType.Root:
         case ElementType.CDATA: {
             const cdata = node as NodeWithChildren;
             const children = recursive ? cloneChildren(cdata.children) : [];
@@ -244,6 +278,11 @@ export function cloneNode(node: Node, recursive = false): Node {
             const children = recursive ? cloneChildren(doc.children) : [];
             const clone = new Document(children);
             children.forEach((child) => (child.parent = clone));
+
+            if (doc["x-mode"]) {
+                clone["x-mode"] = doc["x-mode"];
+            }
+
             result = clone;
             break;
         }
