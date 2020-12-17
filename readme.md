@@ -1,4 +1,5 @@
 # domhandler [![Build Status](https://travis-ci.com/fb55/domhandler.svg?branch=master)](https://travis-ci.com/fb55/domhandler)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ffb55%2Fdomhandler.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ffb55%2Fdomhandler?ref=badge_shield)
 
 The DOM handler creates a tree containing all nodes of a page.
 The tree can be manipulated using the [domutils](https://github.com/fb55/domutils)
@@ -161,3 +162,7 @@ Tidelift will coordinate the fix and disclosure.
 Available as part of the Tidelift Subscription
 
 The maintainers of `domhandler` and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/npm-domhandler?utm_source=npm-domhandler&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ffb55%2Fdomhandler.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ffb55%2Fdomhandler?ref=badge_large)
