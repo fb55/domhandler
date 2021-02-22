@@ -42,7 +42,7 @@
         "@typescript-eslint/parser": "^4.1.0",
         "coveralls": "^3.0.5",
         "eslint": "^7.9.0",
-        "eslint-config-prettier": "^7.0.0",
+        "eslint-config-prettier": "^8.0.0",
         "htmlparser2": "^6.0.0",
         "jest": "^26.0.1",
         "prettier": "^2.0.5",
