@@ -1,0 +1,29 @@
+{
+    "name": "XML mode: All tags should have `type: tag`",
+    "options": {
+        "xmlMode": true
+    },
+    "html": "<script><style><div>",
+    "expected": [
+        {
+            "type": "tag",
+            "name": "script",
+            "attribs": {},
+            "children": [
+                {
+                    "type": "tag",
+                    "name": "style",
+                    "attribs": {},
+                    "children": [
+                        {
+                            "type": "tag",
+                            "name": "div",
+                            "attribs": {},
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

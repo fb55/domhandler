@@ -1,6 +1,6 @@
 {
     "name": "DOM level 1",
-    "options": { "withDomLvl1": true },
+    "options": {},
     "html": "<div>some stray text<h1>Hello, world.</h1><!-- comment node -->more stray text</div>",
     "expected": [
         {

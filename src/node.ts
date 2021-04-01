@@ -184,17 +184,17 @@ export class Element extends NodeWithChildren {
     constructor(
         public name: string,
         public attribs: { [name: string]: string },
-        children: Node[] = []
+        children: Node[] = [],
+        type:
+            | ElementType.Tag
+            | ElementType.Script
+            | ElementType.Style = name === "script"
+            ? ElementType.Script
+            : name === "style"
+            ? ElementType.Style
+            : ElementType.Tag
     ) {
-        super(
-            name === "script"
-                ? ElementType.Script
-                : name === "style"
-                ? ElementType.Style
-                : ElementType.Tag,
-            children
-        );
-        this.attribs = attribs;
+        super(type, children);
     }
 
     // DOM Level 1 aliases

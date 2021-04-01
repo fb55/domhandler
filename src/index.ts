@@ -42,6 +42,13 @@ export interface DomHandlerOptions {
      * @deprecated
      */
     normalizeWhitespace?: boolean;
+
+    /**
+     * Treat the markup as XML.
+     *
+     * @default false
+     */
+    xmlMode?: boolean;
 }
 
 // Default options
@@ -151,7 +158,8 @@ export class DomHandler {
     }
 
     public onopentag(name: string, attribs: { [key: string]: string }): void {
-        const element = new Element(name, attribs);
+        const type = this.options.xmlMode ? ElementType.Tag : undefined;
+        const element = new Element(name, attribs, undefined, type);
         this.addNode(element);
         this.tagStack.push(element);
     }
