@@ -254,11 +254,6 @@ export class DomHandler {
         node.parent = parent;
         this.lastNode = null;
     }
-
-    protected addDataNode(node: DataNode): void {
-        this.addNode(node);
-        this.lastNode = node;
-    }
 }
 
 export default DomHandler;
