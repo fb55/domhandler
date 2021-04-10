@@ -1,5 +1,7 @@
+import { ElementType } from "domelementtype";
 import { Parser, ParserOptions } from "htmlparser2";
 import Handler, { NodeWithChildren, DomHandlerOptions } from ".";
+import * as node from "./node";
 
 describe("Nodes", () => {
     it("should serialize to a Jest snapshot", () => {
@@ -60,6 +62,24 @@ describe("Nodes", () => {
         const clone = result.cloneNode(true);
         expect(clone.startIndex).toBe(0);
         expect(clone.endIndex).toBe(22);
+    });
+
+    it("should throw an error when cloning unsupported types", () => {
+        const el = new node.Node(ElementType.Doctype);
+        expect(() => el.cloneNode()).toThrow("Not implemented yet: doctype");
+    });
+
+    it("should detect tag types", () => {
+        const result = parse("<div foo=bar><div><div>").children[0];
+
+        expect(node.isTag(result)).toBe(true);
+        expect(node.hasChildren(result)).toBe(true);
+
+        expect(node.isCDATA(result)).toBe(false);
+        expect(node.isText(result)).toBe(false);
+        expect(node.isComment(result)).toBe(false);
+        expect(node.isDirective(result)).toBe(false);
+        expect(node.isDocument(result)).toBe(false);
     });
 });
 
