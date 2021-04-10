@@ -1,4 +1,4 @@
-import { ElementType } from "domelementtype";
+import { ElementType, isTag as isTagRaw } from "domelementtype";
 
 const nodeTypes = new Map<ElementType, number>([
     [ElementType.Tag, 1],
@@ -73,7 +73,7 @@ export class Node {
      * @param recursive Clone child nodes as well.
      * @returns A clone of the node.
      */
-    cloneNode(recursive = false): Node {
+    cloneNode<T extends Node>(this: T, recursive = false): T {
         return cloneNode(this, recursive);
     }
 }
@@ -220,81 +220,119 @@ export class Element extends NodeWithChildren {
 }
 
 /**
+ * @param node Node to check.
+ * @returns `true` if the node is a `Element`, `false` otherwise.
+ */
+export function isTag(node: Node): node is Element {
+    return isTagRaw(node);
+}
+
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `CDATA`, `false` otherwise.
+ */
+export function isCDATA(node: Node): node is NodeWithChildren {
+    return node.type === ElementType.CDATA;
+}
+
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `Text`, `false` otherwise.
+ */
+export function isText(node: Node): node is DataNode {
+    return node.type === ElementType.Text;
+}
+
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `Comment`, `false` otherwise.
+ */
+export function isComment(node: Node): node is DataNode {
+    return node.type === ElementType.Comment;
+}
+
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
+ */
+export function isDirective(node: Node): node is ProcessingInstruction {
+    return node.type === ElementType.Directive;
+}
+
+/**
+ * @param node Node to check.
+ * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
+ */
+export function isDocument(node: Node): node is Document {
+    return node.type === ElementType.Root;
+}
+
+/**
+ * @param node Node to check.
+ * @returns `true` if the node is a `NodeWithChildren` (has children), `false` otherwise.
+ */
+export function hasChildren(node: Node): node is NodeWithChildren {
+    return Object.prototype.hasOwnProperty.call(node, "children");
+}
+
+/**
  * Clone a node, and optionally its children.
  *
  * @param recursive Clone child nodes as well.
  * @returns A clone of the node.
  */
-export function cloneNode(node: Node, recursive = false): Node {
-    let result;
+export function cloneNode<T extends Node>(node: T, recursive = false): T {
+    let result: Node;
 
-    switch (node.type) {
-        case ElementType.Text:
-            result = new Text((node as Text).data);
-            break;
-        case ElementType.Directive: {
-            const instr = node as ProcessingInstruction;
-            result = new ProcessingInstruction(instr.name, instr.data);
+    if (isText(node)) {
+        result = new Text(node.data);
+    } else if (isComment(node)) {
+        result = new Comment(node.data);
+    } else if (isTag(node)) {
+        const children = recursive ? cloneChildren(node.children) : [];
+        const clone = new Element(node.name, { ...node.attribs }, children);
+        children.forEach((child) => (child.parent = clone));
 
-            if (instr["x-name"] != null) {
-                result["x-name"] = instr["x-name"];
-                result["x-publicId"] = instr["x-publicId"];
-                result["x-systemId"] = instr["x-systemId"];
-            }
-
-            break;
+        if (node["x-attribsNamespace"]) {
+            clone["x-attribsNamespace"] = { ...node["x-attribsNamespace"] };
         }
-        case ElementType.Comment:
-            result = new Comment((node as Comment).data);
-            break;
-        case ElementType.Tag:
-        case ElementType.Script:
-        case ElementType.Style: {
-            const elem = node as Element;
-            const children = recursive ? cloneChildren(elem.children) : [];
-            const clone = new Element(elem.name, { ...elem.attribs }, children);
-            children.forEach((child) => (child.parent = clone));
-
-            if (elem["x-attribsNamespace"]) {
-                clone["x-attribsNamespace"] = { ...elem["x-attribsNamespace"] };
-            }
-            if (elem["x-attribsPrefix"]) {
-                clone["x-attribsPrefix"] = { ...elem["x-attribsPrefix"] };
-            }
-
-            result = clone;
-            break;
+        if (node["x-attribsPrefix"]) {
+            clone["x-attribsPrefix"] = { ...node["x-attribsPrefix"] };
         }
-        case ElementType.CDATA: {
-            const cdata = node as NodeWithChildren;
-            const children = recursive ? cloneChildren(cdata.children) : [];
-            const clone = new NodeWithChildren(node.type, children);
-            children.forEach((child) => (child.parent = clone));
-            result = clone;
-            break;
-        }
-        case ElementType.Root: {
-            const doc = node as Document;
-            const children = recursive ? cloneChildren(doc.children) : [];
-            const clone = new Document(children);
-            children.forEach((child) => (child.parent = clone));
 
-            if (doc["x-mode"]) {
-                clone["x-mode"] = doc["x-mode"];
-            }
+        result = clone;
+    } else if (isCDATA(node)) {
+        const children = recursive ? cloneChildren(node.children) : [];
+        const clone = new NodeWithChildren(ElementType.CDATA, children);
+        children.forEach((child) => (child.parent = clone));
+        result = clone;
+    } else if (isDocument(node)) {
+        const children = recursive ? cloneChildren(node.children) : [];
+        const clone = new Document(children);
+        children.forEach((child) => (child.parent = clone));
 
-            result = clone;
-            break;
+        if (node["x-mode"]) {
+            clone["x-mode"] = node["x-mode"];
         }
-        case ElementType.Doctype: {
-            // This type isn't used yet.
-            throw new Error("Not implemented yet: ElementType.Doctype case");
+
+        result = clone;
+    } else if (isDirective(node)) {
+        const instruction = new ProcessingInstruction(node.name, node.data);
+
+        if (node["x-name"] != null) {
+            instruction["x-name"] = node["x-name"];
+            instruction["x-publicId"] = node["x-publicId"];
+            instruction["x-systemId"] = node["x-systemId"];
         }
+
+        result = instruction;
+    } else {
+        throw new Error(`Not implemented yet: ${node.type}`);
     }
 
     result.startIndex = node.startIndex;
     result.endIndex = node.endIndex;
-    return result;
+    return result as T;
 }
 
 function cloneChildren(childs: Node[]): Node[] {
