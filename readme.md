@@ -20,8 +20,8 @@ Available options are described below.
 const { Parser } = require("htmlparser2");
 const { DomHandler } = require("domhandler");
 const rawHtml =
-    "Xyz <script language= javascript>var foo = '<<bar>>';< /  script><!--<!-- Waah! -- -->";
-const handler = new DomHandler(function (error, dom) {
+    "Xyz <script language= javascript>var foo = '<<bar>>';</script><!--<!-- Waah! -- -->";
+const handler = new DomHandler((error, dom) => {
     if (error) {
         // Handle error
     } else {
