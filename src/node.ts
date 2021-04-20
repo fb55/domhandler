@@ -78,6 +78,9 @@ export class Node {
     }
 }
 
+/**
+ * A node that contains some data.
+ */
 export class DataNode extends Node {
     /**
      * @param type The type of the node
@@ -99,18 +102,27 @@ export class DataNode extends Node {
     }
 }
 
+/**
+ * Text within the document.
+ */
 export class Text extends DataNode {
     constructor(data: string) {
         super(ElementType.Text, data);
     }
 }
 
+/**
+ * Comments within the document.
+ */
 export class Comment extends DataNode {
     constructor(data: string) {
         super(ElementType.Comment, data);
     }
 }
 
+/**
+ * Processing instructions, including doc types.
+ */
 export class ProcessingInstruction extends DataNode {
     constructor(public name: string, data: string) {
         super(ElementType.Directive, data);
@@ -161,6 +173,9 @@ export class NodeWithChildren extends Node {
     }
 }
 
+/**
+ * The root node of the document.
+ */
 export class Document extends NodeWithChildren {
     constructor(children: Node[]) {
         super(ElementType.Root, children);
@@ -169,12 +184,19 @@ export class Document extends NodeWithChildren {
     "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
 }
 
+/**
+ * The description of an individual attribute.
+ */
 interface Attribute {
     name: string;
     value: string;
     namespace?: string;
     prefix?: string;
 }
+
+/**
+ * An element within the DOM.
+ */
 export class Element extends NodeWithChildren {
     /**
      * @param name Name of the tag, eg. `div`, `span`.
