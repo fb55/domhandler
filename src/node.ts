@@ -261,7 +261,7 @@ export function isCDATA(node: Node): node is NodeWithChildren {
  * @param node Node to check.
  * @returns `true` if the node has the type `Text`, `false` otherwise.
  */
-export function isText(node: Node): node is DataNode {
+export function isText(node: Node): node is Text {
     return node.type === ElementType.Text;
 }
 
