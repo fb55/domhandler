@@ -14,8 +14,8 @@
         "lib"
     ],
     "scripts": {
-        "test": "jest --coverage && npm run lint",
-        "coverage": "cat coverage/lcov.info | coveralls",
+        "test": "npm run test:jest && npm run lint",
+        "test:jest": "jest",
         "lint": "eslint src",
         "format": "prettier --write '**/*.{ts,md,json}'",
         "build": "tsc",
@@ -40,7 +40,6 @@
         "@types/node": "^15.0.0",
         "@typescript-eslint/eslint-plugin": "^4.1.0",
         "@typescript-eslint/parser": "^4.1.0",
-        "coveralls": "^3.0.5",
         "eslint": "^7.9.0",
         "eslint-config-prettier": "^8.1.0",
         "htmlparser2": "^6.0.0",
