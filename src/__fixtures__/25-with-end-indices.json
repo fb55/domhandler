@@ -1,11 +1,11 @@
 {
     "name": "withEndIndices adds correct endIndex properties",
-    "options": { "withStartIndices": true, "withEndIndices": true },
+    "options": { "withEndIndices": true },
     "streaming": false,
     "html": "<!DOCTYPE html> <html> <title>The Title</title> <body class='foo'>Hello world <p></p></body> <!-- the comment --> </html> ",
     "expected": [
         {
-            "endIndex": null,
+            "endIndex": 14,
             "name": "!doctype",
             "data": "!DOCTYPE html",
             "type": "directive"
