@@ -10,23 +10,19 @@ describe("DomHandler", () => {
         .filter((name) => name.endsWith(".json")) // Only allow .json files
         .map((name) => resolve(basePath, name))
         .map(require)
-        .forEach((fixture) =>
-            test(fixture.name, () => {
-                const result = parse(
-                    fixture.html,
-                    fixture.options,
-                    fixture.streaming
-                );
+        .forEach(({ name, html, options = {}, streaming = true, expected }) =>
+            test(name, () => {
+                const result = parse(html, options, streaming);
 
-                compare(result, fixture.expected);
+                compare(result, expected);
             })
         );
 });
 
 function parse(
     data: string,
-    options: DomHandlerOptions & ParserOptions = {},
-    streaming = true
+    options: DomHandlerOptions & ParserOptions,
+    streaming: boolean
 ): Node[] {
     const results: Node[][] = [];
 
