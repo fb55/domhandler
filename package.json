@@ -1,6 +1,6 @@
 {
     "name": "domhandler",
-    "version": "4.2.1",
+    "version": "4.2.2",
     "description": "Handler for htmlparser2 that turns pages into a dom",
     "author": "Felix Boehm <me@feedic.com>",
     "funding": {
