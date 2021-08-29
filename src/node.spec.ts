@@ -61,7 +61,7 @@ describe("Nodes", () => {
         }).children[0];
         const clone = result.cloneNode(true);
         expect(clone.startIndex).toBe(0);
-        expect(clone.endIndex).toBe(22);
+        expect(clone.endIndex).toBe(23);
     });
 
     it("should throw an error when cloning unsupported types", () => {

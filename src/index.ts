@@ -43,6 +43,7 @@ export interface DomHandlerOptions {
 const defaultOpts: DomHandlerOptions = {
     withStartIndices: false,
     withEndIndices: false,
+    xmlMode: false,
 };
 
 interface ParserInterface {
@@ -117,7 +118,7 @@ export class DomHandler {
         this.done = false;
         this.tagStack = [this.root];
         this.lastNode = null;
-        this.parser = this.parser ?? null;
+        this.parser = null;
     }
 
     // Signals the handler that parsing is done
@@ -156,6 +157,9 @@ export class DomHandler {
 
         if (lastNode && lastNode.type === ElementType.Text) {
             lastNode.data += data;
+            if (this.options.withEndIndices) {
+                lastNode.endIndex = this.parser!.endIndex;
+            }
         } else {
             const node = new Text(data);
             this.addNode(node);

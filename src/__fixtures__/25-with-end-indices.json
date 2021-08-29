@@ -1,7 +1,6 @@
 {
     "name": "withEndIndices adds correct endIndex properties",
     "options": { "withEndIndices": true },
-    "streaming": false,
     "html": "<!DOCTYPE html> <html> <title>The Title</title> <body class='foo'>Hello world <p></p></body> <!-- the comment --> </html> ",
     "expected": [
         {

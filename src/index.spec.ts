@@ -10,9 +10,9 @@ describe("DomHandler", () => {
         .filter((name) => name.endsWith(".json")) // Only allow .json files
         .map((name) => resolve(basePath, name))
         .map(require)
-        .forEach(({ name, html, options = {}, streaming = true, expected }) =>
+        .forEach(({ name, html, options = {}, expected }) =>
             test(name, () => {
-                const result = parse(html, options, streaming);
+                const result = parse(html, options);
 
                 compare(result, expected);
             })
@@ -21,8 +21,7 @@ describe("DomHandler", () => {
 
 function parse(
     data: string,
-    options: DomHandlerOptions & ParserOptions,
-    streaming: boolean
+    options: DomHandlerOptions & ParserOptions
 ): Node[] {
     const results: Node[][] = [];
 
@@ -34,21 +33,17 @@ function parse(
     const parser = new Parser(handler, options);
 
     // First, try to run the fixture via chunks
-    if (streaming) {
-        for (let i = 0; i < data.length; i++) {
-            parser.write(data.charAt(i));
-        }
-
-        parser.done();
+    for (let i = 0; i < data.length; i++) {
+        parser.write(data.charAt(i));
     }
+
+    parser.done();
 
     // Then parse everything
     parser.parseComplete(data);
 
-    if (streaming) {
-        // Ensure streaming doesn't change anything.
-        expect(results[0]).toEqual(results[1]);
-    }
+    // Ensure streaming doesn't change anything.
+    expect(results[0]).toEqual(results[1]);
 
     return results[0];
 }
