@@ -166,6 +166,9 @@ export class DomHandler {
 
         if (lastNode && lastNode.type === ElementType.Text) {
             lastNode.data += data;
+            if (this.options.withEndIndices) {
+                lastNode.endIndex = this.parser!.endIndex;
+            }
         } else {
             const node = new Text(data);
             this.addNode(node);
