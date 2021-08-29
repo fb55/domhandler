@@ -145,21 +145,11 @@ export class DomHandler {
         if (this.elementCB) this.elementCB(elem);
     }
 
-    /** Attributes of the current element. */
-    private attribs: { [key: string]: string } = {};
-
-    public onopentagname(name: string): void {
-        this.attribs = {};
+    public onopentag(name: string, attribs: { [key: string]: string }): void {
         const type = this.options.xmlMode ? ElementType.Tag : undefined;
-        const element = new Element(name, this.attribs, undefined, type);
+        const element = new Element(name, attribs, undefined, type);
         this.addNode(element);
         this.tagStack.push(element);
-    }
-
-    public onattribute(name: string, value: string): void {
-        if (!Object.prototype.hasOwnProperty.call(this.attribs, name)) {
-            this.attribs[name] = value;
-        }
     }
 
     public ontext(data: string): void {
