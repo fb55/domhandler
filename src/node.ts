@@ -32,17 +32,41 @@ export class Node {
     endIndex: number | null = null;
 
     /**
+     * `parse5` source code location info.
+     *
+     * Available if parsing with parse5 and location info is enabled.
+     */
+    sourceCodeLocation?: {
+        startOffset: number;
+        endOffset: number;
+        startLine: number;
+        endLine: number;
+        startColumn: number;
+        endColumn: number;
+    };
+
+    /**
      *
      * @param type The type of the node.
      */
     constructor(public type: ElementType) {}
 
     // Read-only aliases
+
+    /**
+     * [DOM spec](https://dom.spec.whatwg.org/#dom-node-nodetype)-compatible
+     * node {@link type}.
+     */
     get nodeType(): number {
         return nodeTypes.get(this.type) ?? 1;
     }
 
     // Read-write aliases for properties
+
+    /**
+     * Same as {@link parent}.
+     * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
+     */
     get parentNode(): NodeWithChildren | null {
         return this.parent;
     }
@@ -51,6 +75,10 @@ export class Node {
         this.parent = parent;
     }
 
+    /**
+     * Same as {@link prev}.
+     * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
+     */
     get previousSibling(): Node | null {
         return this.prev;
     }
@@ -59,6 +87,10 @@ export class Node {
         this.prev = prev;
     }
 
+    /**
+     * Same as {@link next}.
+     * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
+     */
     get nextSibling(): Node | null {
         return this.next;
     }
@@ -93,6 +125,10 @@ export class DataNode extends Node {
         super(type);
     }
 
+    /**
+     * Same as {@link data}.
+     * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
+     */
     get nodeValue(): string {
         return this.data;
     }
@@ -128,8 +164,11 @@ export class ProcessingInstruction extends DataNode {
         super(ElementType.Directive, data);
     }
 
+    /** If this is a doctype, the document type name (parse5 only). */
     "x-name"?: string;
+    /** If this is a doctype, the document type public identifier (parse5 only). */
     "x-publicId"?: string;
+    /** If this is a doctype, the document type system identifier (parse5 only). */
     "x-systemId"?: string;
 }
 
@@ -154,16 +193,22 @@ export class NodeWithChildren extends Node {
     }
 
     // Aliases
+    /** First child of the node. */
     get firstChild(): Node | null {
         return this.children[0] ?? null;
     }
 
+    /** Last child of the node. */
     get lastChild(): Node | null {
         return this.children.length > 0
             ? this.children[this.children.length - 1]
             : null;
     }
 
+    /**
+     * Same as {@link children}.
+     * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
+     */
     get childNodes(): Node[] {
         return this.children;
     }
@@ -181,6 +226,7 @@ export class Document extends NodeWithChildren {
         super(ElementType.Root, children);
     }
 
+    /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
     "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
 }
 
@@ -220,6 +266,11 @@ export class Element extends NodeWithChildren {
     }
 
     // DOM Level 1 aliases
+
+    /**
+     * Same as {@link name}.
+     * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
+     */
     get tagName(): string {
         return this.name;
     }
@@ -237,7 +288,11 @@ export class Element extends NodeWithChildren {
         }));
     }
 
+    /** Element namespace (parse5 only). */
+    namespace?: string;
+    /** Element attribute namespaces (parse5 only). */
     "x-attribsNamespace"?: Record<string, string>;
+    /** Element attribute namespace-related prefixes (parse5 only). */
     "x-attribsPrefix"?: Record<string, string>;
 }
 
@@ -315,6 +370,9 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
         const clone = new Element(node.name, { ...node.attribs }, children);
         children.forEach((child) => (child.parent = clone));
 
+        if (node.namespace != null) {
+            clone.namespace = node.namespace;
+        }
         if (node["x-attribsNamespace"]) {
             clone["x-attribsNamespace"] = { ...node["x-attribsNamespace"] };
         }
@@ -354,6 +412,11 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
 
     result.startIndex = node.startIndex;
     result.endIndex = node.endIndex;
+
+    if (node.sourceCodeLocation != null) {
+        result.sourceCodeLocation = node.sourceCodeLocation;
+    }
+
     return result as T;
 }
 
