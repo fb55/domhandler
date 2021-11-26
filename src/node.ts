@@ -67,11 +67,11 @@ export class Node {
      * Same as {@link parent}.
      * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
      */
-    get parentNode(): NodeWithChildren | null {
+    get parentNode(): Element | null {
         return this.parent;
     }
 
-    set parentNode(parent: NodeWithChildren | null) {
+    set parentNode(parent: Element | null) {
         this.parent = parent;
     }
 
