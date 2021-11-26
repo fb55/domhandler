@@ -17,7 +17,7 @@ const nodeTypes = new Map<ElementType, number>([
  */
 export class Node {
     /** Parent of the node */
-    parent: NodeWithChildren | null = null;
+    parent: Element | null = null;
 
     /** Previous sibling */
     prev: Node | null = null;
