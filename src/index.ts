@@ -12,6 +12,8 @@ import {
 
 export * from "./node";
 
+const reWhitespace = /\s+/g;
+
 export interface DomHandlerOptions {
     /**
      * Add a `startIndex` property to nodes.
@@ -32,6 +34,16 @@ export interface DomHandlerOptions {
     withEndIndices?: boolean;
 
     /**
+     * Replace all whitespace with single spaces.
+     *
+     * **Note:** Enabling this might break your markup.
+     *
+     * @default false
+     * @deprecated
+     */
+    normalizeWhitespace?: boolean;
+
+    /**
      * Treat the markup as XML.
      *
      * @default false
@@ -41,6 +53,7 @@ export interface DomHandlerOptions {
 
 // Default options
 const defaultOpts: DomHandlerOptions = {
+    normalizeWhitespace: false,
     withStartIndices: false,
     withEndIndices: false,
     xmlMode: false,
@@ -153,14 +166,26 @@ export class DomHandler {
     }
 
     public ontext(data: string): void {
+        const { normalizeWhitespace } = this.options;
         const { lastNode } = this;
 
         if (lastNode && lastNode.type === ElementType.Text) {
-            lastNode.data += data;
+            if (normalizeWhitespace) {
+                lastNode.data = (lastNode.data + data).replace(
+                    reWhitespace,
+                    " "
+                );
+            } else {
+                lastNode.data += data;
+            }
             if (this.options.withEndIndices) {
                 lastNode.endIndex = this.parser!.endIndex;
             }
         } else {
+            if (normalizeWhitespace) {
+                data = data.replace(reWhitespace, " ");
+            }
+
             const node = new Text(data);
             this.addNode(node);
             this.lastNode = node;
