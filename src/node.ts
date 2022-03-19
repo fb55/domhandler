@@ -11,6 +11,26 @@ const nodeTypes = new Map<ElementType, number>([
     [ElementType.Root, 9],
 ]);
 
+interface SourceCodeLocation {
+    /** One-based line index of the first character. */
+    startLine: number;
+    /** One-based column index of the first character. */
+    startCol: number;
+    /** Zero-based first character index. */
+    startOffset: number;
+    /** One-based line index of the last character. */
+    endLine: number;
+    /** One-based column index of the last character. Points directly *after* the last character. */
+    endCol: number;
+    /** Zero-based last character index. Points directly *after* the last character. */
+    endOffset: number;
+}
+
+interface TagSourceCodeLocation extends SourceCodeLocation {
+    startTag?: SourceCodeLocation;
+    endTag?: SourceCodeLocation;
+}
+
 /**
  * This object will be used as the prototype for Nodes when creating a
  * DOM-Level-1-compliant structure.
@@ -36,14 +56,7 @@ export class Node {
      *
      * Available if parsing with parse5 and location info is enabled.
      */
-    sourceCodeLocation?: {
-        startOffset: number;
-        endOffset: number;
-        startLine: number;
-        endLine: number;
-        startColumn: number;
-        endColumn: number;
-    };
+    sourceCodeLocation?: SourceCodeLocation | null;
 
     /**
      *
@@ -264,6 +277,13 @@ export class Element extends NodeWithChildren {
     ) {
         super(type, children);
     }
+
+    /**
+     * `parse5` source code location info, with start & end tags.
+     *
+     * Available if parsing with parse5 and location info is enabled.
+     */
+    sourceCodeLocation?: TagSourceCodeLocation | null;
 
     // DOM Level 1 aliases
 
