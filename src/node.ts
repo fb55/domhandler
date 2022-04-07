@@ -139,9 +139,9 @@ export abstract class DataNode extends Node {
  * Text within the document.
  */
 export class Text extends DataNode {
-    type = ElementType.Text;
+    type: ElementType.Text = ElementType.Text;
 
-    get nodeType(): number {
+    get nodeType(): 3 {
         return 3;
     }
 }
@@ -150,9 +150,9 @@ export class Text extends DataNode {
  * Comments within the document.
  */
 export class Comment extends DataNode {
-    type = ElementType.Comment;
+    type: ElementType.Comment = ElementType.Comment;
 
-    get nodeType(): number {
+    get nodeType(): 8 {
         return 8;
     }
 }
@@ -161,13 +161,13 @@ export class Comment extends DataNode {
  * Processing instructions, including doc types.
  */
 export class ProcessingInstruction extends DataNode {
-    type = ElementType.Directive;
+    type: ElementType.Directive = ElementType.Directive;
 
     constructor(public name: string, data: string) {
         super(data);
     }
 
-    override get nodeType(): number {
+    override get nodeType(): 1 {
         return 1;
     }
 
@@ -217,9 +217,9 @@ export abstract class NodeWithChildren extends Node {
 }
 
 export class CDATA extends NodeWithChildren {
-    type = ElementType.CDATA;
+    type: ElementType.CDATA = ElementType.CDATA;
 
-    get nodeType(): number {
+    get nodeType(): 4 {
         return 4;
     }
 }
@@ -228,9 +228,9 @@ export class CDATA extends NodeWithChildren {
  * The root node of the document.
  */
 export class Document extends NodeWithChildren {
-    type = ElementType.Root;
+    type: ElementType.Root = ElementType.Root;
 
-    get nodeType(): number {
+    get nodeType(): 9 {
         return 9;
     }
 
@@ -273,7 +273,7 @@ export class Element extends NodeWithChildren {
         super(children);
     }
 
-    get nodeType(): number {
+    get nodeType(): 1 {
         return 1;
     }
 
