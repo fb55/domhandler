@@ -33,7 +33,7 @@
         "node": ">= 4"
     },
     "dependencies": {
-        "domelementtype": "^2.2.0"
+        "domelementtype": "^2.3.0"
     },
     "devDependencies": {
         "@types/jest": "^27.4.1",
