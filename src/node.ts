@@ -31,19 +31,26 @@ interface TagSourceCodeLocation extends SourceCodeLocation {
     endTag?: SourceCodeLocation;
 }
 
+export type ParentNode = Document | Element | CDATA;
+export type ChildNode = DataNode | Element | CDATA;
+export type AnyNode = ParentNode | ChildNode;
+
 /**
  * This object will be used as the prototype for Nodes when creating a
  * DOM-Level-1-compliant structure.
  */
-export class Node {
+export abstract class Node {
+    /** The type of the node. */
+    abstract type: ElementType;
+
     /** Parent of the node */
-    parent: NodeWithChildren | null = null;
+    parent: ParentNode | null = null;
 
     /** Previous sibling */
-    prev: Node | null = null;
+    prev: ChildNode | null = null;
 
     /** Next sibling */
-    next: Node | null = null;
+    next: ChildNode | null = null;
 
     /** The start index of the node. Requires `withStartIndices` on the handler to be `true. */
     startIndex: number | null = null;
@@ -57,12 +64,6 @@ export class Node {
      * Available if parsing with parse5 and location info is enabled.
      */
     sourceCodeLocation?: SourceCodeLocation | null;
-
-    /**
-     *
-     * @param type The type of the node.
-     */
-    constructor(public type: ElementType) {}
 
     // Read-only aliases
 
@@ -80,11 +81,11 @@ export class Node {
      * Same as {@link parent}.
      * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
      */
-    get parentNode(): NodeWithChildren | null {
+    get parentNode(): ParentNode | null {
         return this.parent;
     }
 
-    set parentNode(parent: NodeWithChildren | null) {
+    set parentNode(parent: ParentNode | null) {
         this.parent = parent;
     }
 
@@ -92,11 +93,11 @@ export class Node {
      * Same as {@link prev}.
      * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
      */
-    get previousSibling(): Node | null {
+    get previousSibling(): ChildNode | null {
         return this.prev;
     }
 
-    set previousSibling(prev: Node | null) {
+    set previousSibling(prev: ChildNode | null) {
         this.prev = prev;
     }
 
@@ -104,11 +105,11 @@ export class Node {
      * Same as {@link next}.
      * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
      */
-    get nextSibling(): Node | null {
+    get nextSibling(): ChildNode | null {
         return this.next;
     }
 
-    set nextSibling(next: Node | null) {
+    set nextSibling(next: ChildNode | null) {
         this.next = next;
     }
 
@@ -132,10 +133,13 @@ export class DataNode extends Node {
      * @param data The content of the data node
      */
     constructor(
-        type: ElementType.Comment | ElementType.Text | ElementType.Directive,
+        public type:
+            | ElementType.Comment
+            | ElementType.Text
+            | ElementType.Directive,
         public data: string
     ) {
-        super(type);
+        super();
     }
 
     /**
@@ -188,31 +192,22 @@ export class ProcessingInstruction extends DataNode {
 /**
  * A `Node` that can have children.
  */
-export class NodeWithChildren extends Node {
+export abstract class NodeWithChildren extends Node {
     /**
-     * @param type Type of the node.
      * @param children Children of the node. Only certain node types can have children.
      */
-    constructor(
-        type:
-            | ElementType.Root
-            | ElementType.CDATA
-            | ElementType.Script
-            | ElementType.Style
-            | ElementType.Tag,
-        public children: Node[]
-    ) {
-        super(type);
+    constructor(public children: ChildNode[]) {
+        super();
     }
 
     // Aliases
     /** First child of the node. */
-    get firstChild(): Node | null {
+    get firstChild(): ChildNode | null {
         return this.children[0] ?? null;
     }
 
     /** Last child of the node. */
-    get lastChild(): Node | null {
+    get lastChild(): ChildNode | null {
         return this.children.length > 0
             ? this.children[this.children.length - 1]
             : null;
@@ -222,22 +217,24 @@ export class NodeWithChildren extends Node {
      * Same as {@link children}.
      * [DOM spec](https://dom.spec.whatwg.org)-compatible alias.
      */
-    get childNodes(): Node[] {
+    get childNodes(): ChildNode[] {
         return this.children;
     }
 
-    set childNodes(children: Node[]) {
+    set childNodes(children: ChildNode[]) {
         this.children = children;
     }
+}
+
+export class CDATA extends NodeWithChildren {
+    type = ElementType.CDATA;
 }
 
 /**
  * The root node of the document.
  */
 export class Document extends NodeWithChildren {
-    constructor(children: Node[]) {
-        super(ElementType.Root, children);
-    }
+    type = ElementType.Root;
 
     /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
     "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
@@ -265,8 +262,8 @@ export class Element extends NodeWithChildren {
     constructor(
         public name: string,
         public attribs: { [name: string]: string },
-        children: Node[] = [],
-        type:
+        children: ChildNode[] = [],
+        public type:
             | ElementType.Tag
             | ElementType.Script
             | ElementType.Style = name === "script"
@@ -275,7 +272,7 @@ export class Element extends NodeWithChildren {
             ? ElementType.Style
             : ElementType.Tag
     ) {
-        super(type, children);
+        super(children);
     }
 
     /**
@@ -328,7 +325,7 @@ export function isTag(node: Node): node is Element {
  * @param node Node to check.
  * @returns `true` if the node has the type `CDATA`, `false` otherwise.
  */
-export function isCDATA(node: Node): node is NodeWithChildren {
+export function isCDATA(node: Node): node is CDATA {
     return node.type === ElementType.CDATA;
 }
 
@@ -366,9 +363,9 @@ export function isDocument(node: Node): node is Document {
 
 /**
  * @param node Node to check.
- * @returns `true` if the node is a `NodeWithChildren` (has children), `false` otherwise.
+ * @returns `true` if the node has children, `false` otherwise.
  */
-export function hasChildren(node: Node): node is NodeWithChildren {
+export function hasChildren(node: Node): node is ParentNode {
     return Object.prototype.hasOwnProperty.call(node, "children");
 }
 
@@ -403,7 +400,7 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
         result = clone;
     } else if (isCDATA(node)) {
         const children = recursive ? cloneChildren(node.children) : [];
-        const clone = new NodeWithChildren(ElementType.CDATA, children);
+        const clone = new CDATA(children);
         children.forEach((child) => (child.parent = clone));
         result = clone;
     } else if (isDocument(node)) {
@@ -440,7 +437,7 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
     return result as T;
 }
 
-function cloneChildren(childs: Node[]): Node[] {
+function cloneChildren(childs: ChildNode[]): ChildNode[] {
     const children = childs.map((child) => cloneNode(child, true));
 
     for (let i = 1; i < children.length; i++) {

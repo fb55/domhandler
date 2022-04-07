@@ -1,13 +1,15 @@
 import { ElementType } from "domelementtype";
 import {
     Node,
+    ChildNode,
     Element,
     DataNode,
     Text,
     Comment,
-    NodeWithChildren,
+    CDATA,
     Document,
     ProcessingInstruction,
+    ParentNode,
 } from "./node";
 
 export * from "./node";
@@ -56,7 +58,7 @@ type ElementCallback = (element: Element) => void;
 
 export class DomHandler {
     /** The elements of the DOM */
-    public dom: Node[] = [];
+    public dom: ChildNode[] = [];
 
     /** The root element for the DOM */
     public root = new Document(this.dom);
@@ -74,7 +76,7 @@ export class DomHandler {
     private done = false;
 
     /** Stack of open tags. */
-    protected tagStack: NodeWithChildren[] = [this.root];
+    protected tagStack: ParentNode[] = [this.root];
 
     /** A data node that is still being written to. */
     protected lastNode: DataNode | null = null;
@@ -184,7 +186,7 @@ export class DomHandler {
 
     public oncdatastart(): void {
         const text = new Text("");
-        const node = new NodeWithChildren(ElementType.CDATA, [text]);
+        const node = new CDATA([text]);
 
         this.addNode(node);
 
@@ -209,10 +211,10 @@ export class DomHandler {
         }
     }
 
-    protected addNode(node: Node): void {
+    protected addNode(node: ChildNode): void {
         const parent = this.tagStack[this.tagStack.length - 1];
         const previousSibling = parent.children[parent.children.length - 1] as
-            | Node
+            | ChildNode
             | undefined;
 
         if (this.options.withStartIndices) {
