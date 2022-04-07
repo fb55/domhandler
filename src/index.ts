@@ -1,6 +1,5 @@
 import { ElementType } from "domelementtype";
 import {
-    Node,
     ChildNode,
     Element,
     DataNode,
@@ -53,7 +52,7 @@ interface ParserInterface {
     endIndex: number | null;
 }
 
-type Callback = (error: Error | null, dom: Node[]) => void;
+type Callback = (error: Error | null, dom: ChildNode[]) => void;
 type ElementCallback = (element: Element) => void;
 
 export class DomHandler {
