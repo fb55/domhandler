@@ -67,6 +67,7 @@ describe("Nodes", () => {
     it("should throw an error when cloning unsupported types", () => {
         class Doctype extends node.Node {
             type = ElementType.Doctype;
+            nodeType = NaN;
         }
         const el = new Doctype();
         expect(() => el.cloneNode()).toThrow("Not implemented yet: doctype");

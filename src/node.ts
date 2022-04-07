@@ -1,16 +1,5 @@
 import { ElementType, isTag as isTagRaw } from "domelementtype";
 
-const nodeTypes = new Map<ElementType, number>([
-    [ElementType.Tag, 1],
-    [ElementType.Script, 1],
-    [ElementType.Style, 1],
-    [ElementType.Directive, 1],
-    [ElementType.Text, 3],
-    [ElementType.CDATA, 4],
-    [ElementType.Comment, 8],
-    [ElementType.Root, 9],
-]);
-
 interface SourceCodeLocation {
     /** One-based line index of the first character. */
     startLine: number;
@@ -41,7 +30,7 @@ export type AnyNode = ParentNode | ChildNode;
  */
 export abstract class Node {
     /** The type of the node. */
-    abstract type: ElementType;
+    abstract readonly type: ElementType;
 
     /** Parent of the node */
     parent: ParentNode | null = null;
@@ -71,9 +60,7 @@ export abstract class Node {
      * [DOM spec](https://dom.spec.whatwg.org/#dom-node-nodetype)-compatible
      * node {@link type}.
      */
-    get nodeType(): number {
-        return nodeTypes.get(this.type) ?? 1;
-    }
+    abstract readonly nodeType: number;
 
     // Read-write aliases for properties
 
@@ -127,18 +114,11 @@ export abstract class Node {
 /**
  * A node that contains some data.
  */
-export class DataNode extends Node {
+export abstract class DataNode extends Node {
     /**
-     * @param type The type of the node
      * @param data The content of the data node
      */
-    constructor(
-        public type:
-            | ElementType.Comment
-            | ElementType.Text
-            | ElementType.Directive,
-        public data: string
-    ) {
+    constructor(public data: string) {
         super();
     }
 
@@ -159,8 +139,10 @@ export class DataNode extends Node {
  * Text within the document.
  */
 export class Text extends DataNode {
-    constructor(data: string) {
-        super(ElementType.Text, data);
+    type = ElementType.Text;
+
+    get nodeType(): number {
+        return 3;
     }
 }
 
@@ -168,8 +150,10 @@ export class Text extends DataNode {
  * Comments within the document.
  */
 export class Comment extends DataNode {
-    constructor(data: string) {
-        super(ElementType.Comment, data);
+    type = ElementType.Comment;
+
+    get nodeType(): number {
+        return 8;
     }
 }
 
@@ -177,8 +161,14 @@ export class Comment extends DataNode {
  * Processing instructions, including doc types.
  */
 export class ProcessingInstruction extends DataNode {
+    type = ElementType.Directive;
+
     constructor(public name: string, data: string) {
-        super(ElementType.Directive, data);
+        super(data);
+    }
+
+    override get nodeType(): number {
+        return 1;
     }
 
     /** If this is a doctype, the document type name (parse5 only). */
@@ -228,6 +218,10 @@ export abstract class NodeWithChildren extends Node {
 
 export class CDATA extends NodeWithChildren {
     type = ElementType.CDATA;
+
+    get nodeType(): number {
+        return 4;
+    }
 }
 
 /**
@@ -235,6 +229,10 @@ export class CDATA extends NodeWithChildren {
  */
 export class Document extends NodeWithChildren {
     type = ElementType.Root;
+
+    get nodeType(): number {
+        return 9;
+    }
 
     /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
     "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
@@ -273,6 +271,10 @@ export class Element extends NodeWithChildren {
             : ElementType.Tag
     ) {
         super(children);
+    }
+
+    get nodeType(): number {
+        return 1;
     }
 
     /**
