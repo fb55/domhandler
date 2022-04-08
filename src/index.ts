@@ -9,9 +9,9 @@ import {
     Document,
     ProcessingInstruction,
     ParentNode,
-} from "./node";
+} from "./node.js";
 
-export * from "./node";
+export * from "./node.js";
 
 export interface DomHandlerOptions {
     /**

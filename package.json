@@ -9,6 +9,11 @@
     "license": "BSD-2-Clause",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "module": "lib/esm/index.js",
+    "exports": {
+        "require": "./lib/index.js",
+        "import": "./lib/esm/index.js"
+    },
     "sideEffects": false,
     "files": [
         "lib"
@@ -18,7 +23,9 @@
         "test:jest": "jest",
         "lint": "eslint src",
         "format": "prettier --write '**/*.{ts,md,json}'",
-        "build": "tsc",
+        "build": "npm run build:cjs && npm run build:esm",
+        "build:cjs": "tsc",
+        "build:esm": "tsc --module esnext --target es2019 --outDir lib/esm && echo '{\"type\":\"module\"}' > lib/esm/package.json",
         "prepare": "npm run build"
     },
     "repository": {
@@ -50,7 +57,10 @@
     },
     "jest": {
         "preset": "ts-jest",
-        "testEnvironment": "node"
+        "testEnvironment": "node",
+        "moduleNameMapper": {
+            "^(.*)\\.js$": "$1"
+        }
     },
     "prettier": {
         "tabWidth": 4
