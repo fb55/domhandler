@@ -65,7 +65,11 @@ describe("Nodes", () => {
     });
 
     it("should throw an error when cloning unsupported types", () => {
-        const el = new node.Node(ElementType.Doctype);
+        class Doctype extends node.Node {
+            type = ElementType.Doctype;
+            nodeType = NaN;
+        }
+        const el = new Doctype();
         expect(() => el.cloneNode()).toThrow("Not implemented yet: doctype");
     });
 
@@ -80,6 +84,21 @@ describe("Nodes", () => {
         expect(node.isComment(result)).toBe(false);
         expect(node.isDirective(result)).toBe(false);
         expect(node.isDocument(result)).toBe(false);
+    });
+
+    it("should support using tagged types", () => {
+        // We want to make sure TS is happy about the tagged types.
+        const parent: node.ParentNode = new node.Document([]);
+
+        function setQuirks(el: node.ParentNode): void {
+            if (el.type === ElementType.Root) {
+                el["x-mode"] = "no-quirks";
+            }
+        }
+
+        setQuirks(parent);
+
+        expect(parent).toHaveProperty("x-mode", "no-quirks");
     });
 });
 
