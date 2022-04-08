@@ -343,7 +343,7 @@ export function isText(node: Node): node is Text {
  * @param node Node to check.
  * @returns `true` if the node has the type `Comment`, `false` otherwise.
  */
-export function isComment(node: Node): node is DataNode {
+export function isComment(node: Node): node is Comment {
     return node.type === ElementType.Comment;
 }
 
