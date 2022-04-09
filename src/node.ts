@@ -21,7 +21,12 @@ interface TagSourceCodeLocation extends SourceCodeLocation {
 }
 
 export type ParentNode = Document | Element | CDATA;
-export type ChildNode = DataNode | Element | CDATA;
+export type ChildNode =
+    | Text
+    | Comment
+    | ProcessingInstruction
+    | Element
+    | CDATA;
 export type AnyNode = ParentNode | ChildNode;
 
 /**
