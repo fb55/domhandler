@@ -26,7 +26,9 @@ export type ChildNode =
     | Comment
     | ProcessingInstruction
     | Element
-    | CDATA;
+    | CDATA
+    // `Document` is also used for document fragments, and can be a child node.
+    | Document;
 export type AnyNode = ParentNode | ChildNode;
 
 /**
