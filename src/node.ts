@@ -20,7 +20,14 @@ interface TagSourceCodeLocation extends SourceCodeLocation {
     endTag?: SourceCodeLocation;
 }
 
+/**
+ * A node that can have children.
+ */
 export type ParentNode = Document | Element | CDATA;
+
+/**
+ * A node that can have a parent.
+ */
 export type ChildNode =
     | Text
     | Comment
@@ -187,7 +194,7 @@ export class ProcessingInstruction extends DataNode {
 }
 
 /**
- * A `Node` that can have children.
+ * A node that can have children.
  */
 export abstract class NodeWithChildren extends Node {
     /**
@@ -223,6 +230,9 @@ export abstract class NodeWithChildren extends Node {
     }
 }
 
+/**
+ * CDATA nodes.
+ */
 export class CDATA extends NodeWithChildren {
     type: ElementType.CDATA = ElementType.CDATA;
 
@@ -323,56 +333,70 @@ export class Element extends NodeWithChildren {
 }
 
 /**
+ * Checks if `node` is an element node.
+ *
  * @param node Node to check.
- * @returns `true` if the node is a `Element`, `false` otherwise.
+ * @returns `true` if the node is an element node.
  */
 export function isTag(node: Node): node is Element {
     return isTagRaw(node);
 }
 
 /**
+ * Checks if `node` is a CDATA node.
+ *
  * @param node Node to check.
- * @returns `true` if the node has the type `CDATA`, `false` otherwise.
+ * @returns `true` if the node is a CDATA node.
  */
 export function isCDATA(node: Node): node is CDATA {
     return node.type === ElementType.CDATA;
 }
 
 /**
+ * Checks if `node` is a text node.
+ *
  * @param node Node to check.
- * @returns `true` if the node has the type `Text`, `false` otherwise.
+ * @returns `true` if the node is a text node.
  */
 export function isText(node: Node): node is Text {
     return node.type === ElementType.Text;
 }
 
 /**
+ * Checks if `node` is a comment node.
+ *
  * @param node Node to check.
- * @returns `true` if the node has the type `Comment`, `false` otherwise.
+ * @returns `true` if the node is a comment node.
  */
 export function isComment(node: Node): node is Comment {
     return node.type === ElementType.Comment;
 }
 
 /**
+ * Checks if `node` is a directive node.
+ *
  * @param node Node to check.
- * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
+ * @returns `true` if the node is a directive node.
  */
 export function isDirective(node: Node): node is ProcessingInstruction {
     return node.type === ElementType.Directive;
 }
 
 /**
+ * Checks if `node` is a document node.
+ *
  * @param node Node to check.
- * @returns `true` if the node has the type `ProcessingInstruction`, `false` otherwise.
+ * @returns `true` if the node is a document node.
  */
 export function isDocument(node: Node): node is Document {
     return node.type === ElementType.Root;
 }
 
 /**
+ * Checks if `node` has children.
+ *
  * @param node Node to check.
- * @returns `true` if the node has children, `false` otherwise.
+ * @returns `true` if the node has children.
  */
 export function hasChildren(node: Node): node is ParentNode {
     return Object.prototype.hasOwnProperty.call(node, "children");
@@ -446,6 +470,12 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
     return result as T;
 }
 
+/**
+ * Clone a list of child nodes.
+ *
+ * @param childs The child nodes to clone.
+ * @returns A list of cloned child nodes.
+ */
 function cloneChildren(childs: ChildNode[]): ChildNode[] {
     const children = childs.map((child) => cloneNode(child, true));
 
