@@ -393,13 +393,27 @@ export function isDocument(node: Node): node is Document {
 }
 
 /**
+ * Checks if `node` is a parent node.
+ *
+ * @param node Node to check.
+ * @returns `true` if the node is a parent node.
+ */
+export function isParentNode(node: Node): node is ParentNode {
+    return (
+        node.type === ElementType.Root ||
+        node.type === ElementType.Tag ||
+        node.type === ElementType.CDATA
+    );
+}
+
+/**
  * Checks if `node` has children.
  *
  * @param node Node to check.
  * @returns `true` if the node has children.
  */
 export function hasChildren(node: Node): node is ParentNode {
-    return Object.prototype.hasOwnProperty.call(node, "children");
+    return isParentNode(node) && node.children.length > 0;
 }
 
 /**

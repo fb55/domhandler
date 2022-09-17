@@ -84,6 +84,12 @@ describe("Nodes", () => {
         expect(node.isComment(result)).toBe(false);
         expect(node.isDirective(result)).toBe(false);
         expect(node.isDocument(result)).toBe(false);
+        expect(node.isParentNode(result)).toBe(true);
+    });
+
+    it("should not detect children when there are none", () => {
+        const result = parse("<div foo=bar>").children[0];
+        expect(node.hasChildren(result)).toBe(false);
     });
 
     it("should support using tagged types", () => {
