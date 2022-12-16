@@ -1,4 +1,4 @@
-# domhandler [![Build Status](https://travis-ci.com/fb55/domhandler.svg?branch=master)](https://travis-ci.com/fb55/domhandler)
+# domhandler [![Node.js CI](https://github.com/fb55/domhandler/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/fb55/domhandler/actions/workflows/nodejs-test.yml)
 
 The DOM handler creates a tree containing all nodes of a page.
 The tree can be manipulated using the [domutils](https://github.com/fb55/domutils)
