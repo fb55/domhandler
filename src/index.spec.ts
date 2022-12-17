@@ -48,14 +48,21 @@ function parse(
     return results[0];
 }
 
-function compare<T>(actual: T, expected: T) {
-    expect(typeof actual).toBe(typeof expected);
-    if (typeof expected !== "object" || expected === null) {
+function compare(actual: unknown, expected: unknown) {
+    if (
+        typeof expected !== "object" ||
+        expected === null ||
+        typeof actual !== "object" ||
+        actual === null
+    ) {
         expect(actual).toBe(expected);
     } else {
         for (const prop in expected) {
             expect(prop in actual).toBeTruthy();
-            compare(actual[prop], expected[prop]);
+            compare(
+                (actual as Record<string, unknown>)[prop],
+                (expected as Record<string, unknown>)[prop]
+            );
         }
     }
 }
