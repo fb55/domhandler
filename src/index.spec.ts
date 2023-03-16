@@ -59,10 +59,7 @@ function compare(actual: unknown, expected: unknown) {
     } else {
         for (const prop in expected) {
             expect(prop in actual).toBeTruthy();
-            compare(
-                (actual as Record<string, unknown>)[prop],
-                (expected as Record<string, unknown>)[prop]
-            );
+            compare(actual[prop as never], expected[prop as never]);
         }
     }
 }
