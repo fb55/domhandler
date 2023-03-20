@@ -57,7 +57,7 @@
         "eslint-config-prettier": "^8.7.0",
         "htmlparser2": "^8.0.1",
         "jest": "^27.5.1",
-        "prettier": "^2.8.4",
+        "prettier": "^2.8.5",
         "ts-jest": "^27.1.4",
         "typedoc": "^0.23.27",
         "typedoc-plugin-missing-exports": "^1.0.0",
