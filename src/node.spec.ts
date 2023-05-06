@@ -10,7 +10,7 @@ describe("Nodes", () => {
         );
         expect(result).toMatchInlineSnapshot(`
             Document {
-              "children": Array [
+              "children": [
                 <html>
                   <!-- A Comment -->
                   <title>

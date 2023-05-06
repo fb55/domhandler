@@ -9,7 +9,10 @@ on:
 env:
     CI: true
     FORCE_COLOR: 2
-    NODE_COV: 16 # The Node.js version to run coveralls on
+    NODE_COV: "lts/*" # The Node.js version to run coveralls on
+
+permissions:
+    contents: read
 
 jobs:
     lint:
@@ -18,12 +21,15 @@ jobs:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: lts/*
                   cache: npm
             - run: npm ci
             - run: npm run lint
 
     test:
+        permissions:
+            checks: write # for coverallsapp/github-action to create new checks
+            contents: read # for actions/checkout to fetch code
         name: Node ${{ matrix.node }}
         runs-on: ubuntu-latest
 
@@ -31,10 +37,10 @@ jobs:
             fail-fast: false
             matrix:
                 node:
-                    - 10
-                    - 12
-                    - 14
                     - 16
+                    - 18
+                    - 20
+                    - "lts/*"
 
         steps:
             - uses: actions/checkout@v3
