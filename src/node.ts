@@ -177,7 +177,10 @@ export class Comment extends DataNode {
 export class ProcessingInstruction extends DataNode {
     type: ElementType.Directive = ElementType.Directive;
 
-    constructor(public name: string, data: string) {
+    constructor(
+        public name: string,
+        data: string,
+    ) {
         super(data);
     }
 
@@ -285,7 +288,7 @@ export class Element extends NodeWithChildren {
             ? ElementType.Script
             : name === "style"
             ? ElementType.Style
-            : ElementType.Tag
+            : ElementType.Tag,
     ) {
         super(children);
     }
