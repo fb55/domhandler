@@ -6,7 +6,7 @@ import * as node from "./node";
 describe("Nodes", () => {
     it("should serialize to a Jest snapshot", () => {
         const result = parse(
-            "<html><!-- A Comment --><title>The Title</title><body>Hello world<input disabled type=text></body></html>"
+            "<html><!-- A Comment --><title>The Title</title><body>Hello world<input disabled type=text></body></html>",
         );
         expect(result).toMatchInlineSnapshot(`
             Document {
@@ -42,7 +42,7 @@ describe("Nodes", () => {
                 <title>The Title</title>
                 <body>Hello world<input disabled type=text></body>
                 <script><![CDATA[secret script]]></script>
-            </html>`
+            </html>`,
         );
         expect(result.cloneNode(true)).toStrictEqual(result);
     });

@@ -91,7 +91,7 @@ export class DomHandler {
     public constructor(
         callback?: Callback | null,
         options?: DomHandlerOptions | null,
-        elementCB?: ElementCallback
+        elementCB?: ElementCallback,
     ) {
         // Make it possible to skip arguments, for backwards-compatibility
         if (typeof options === "function") {

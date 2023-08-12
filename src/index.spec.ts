@@ -15,13 +15,13 @@ describe("DomHandler", () => {
                 const result = parse(html, options);
 
                 compare(result, expected);
-            })
+            }),
         );
 });
 
 function parse(
     data: string,
-    options: DomHandlerOptions & ParserOptions
+    options: DomHandlerOptions & ParserOptions,
 ): Node[] {
     const results: Node[][] = [];
 
