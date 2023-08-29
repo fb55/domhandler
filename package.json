@@ -60,7 +60,7 @@
         "prettier": "^3.0.2",
         "ts-jest": "^29.1.1",
         "typedoc-plugin-missing-exports": "^2.1.0",
-        "typedoc": "^0.24.8",
+        "typedoc": "^0.25.0",
         "typescript": "^5.1.6"
     },
     "jest": {
