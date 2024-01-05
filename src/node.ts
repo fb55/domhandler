@@ -287,8 +287,8 @@ export class Element extends NodeWithChildren {
             | ElementType.Style = name === "script"
             ? ElementType.Script
             : name === "style"
-            ? ElementType.Style
-            : ElementType.Tag,
+              ? ElementType.Style
+              : ElementType.Tag,
     ) {
         super(children);
     }
