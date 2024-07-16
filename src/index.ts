@@ -60,7 +60,7 @@ export class DomHandler {
     public dom: ChildNode[] = [];
 
     /** The root element for the DOM */
-    public root = new Document(this.dom);
+    public root: Document = new Document(this.dom);
 
     /** Called once parsing has completed. */
     private readonly callback: Callback | null;
