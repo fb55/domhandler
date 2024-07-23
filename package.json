@@ -61,7 +61,7 @@
         "ts-jest": "^29.2.3",
         "typedoc-plugin-missing-exports": "^3.0.0",
         "typedoc": "^0.26.5",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     },
     "jest": {
         "preset": "ts-jest",
