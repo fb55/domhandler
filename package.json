@@ -52,7 +52,7 @@
         "@types/jest": "^29.5.14",
         "@types/node": "^22.15.30",
         "@typescript-eslint/eslint-plugin": "^8.35.0",
-        "@typescript-eslint/parser": "^8.35.0",
+        "@typescript-eslint/parser": "^8.35.1",
         "eslint-config-prettier": "^10.1.5",
         "eslint": "^8.57.1",
         "htmlparser2": "^10.0.0",
