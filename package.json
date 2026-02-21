@@ -1,4 +1,5 @@
 {
+    "type": "commonjs",
     "name": "domhandler",
     "version": "5.0.3",
     "description": "Handler for htmlparser2 that turns pages into a dom",
@@ -11,28 +12,27 @@
     "types": "lib/index.d.ts",
     "module": "lib/esm/index.js",
     "exports": {
-        "require": "./lib/index.js",
-        "import": "./lib/esm/index.js"
+        "import": "./lib/esm/index.js",
+        "require": "./lib/index.js"
     },
     "sideEffects": false,
     "files": [
         "lib"
     ],
     "scripts": {
-        "test": "npm run test:jest && npm run lint",
-        "test:jest": "jest",
-        "lint": "npm run lint:es && npm run lint:prettier",
-        "lint:es": "eslint --ignore-path .gitignore .",
-        "lint:prettier": "npm run prettier -- --check",
-        "format": "npm run format:es && npm run format:prettier",
-        "format:es": "npm run lint:es -- --fix",
-        "format:prettier": "npm run prettier -- --write",
-        "prettier": "prettier \"**/*.{ts,md,json,yml}\" --ignore-path .gitignore",
         "build": "npm run build:cjs && npm run build:esm",
         "build:cjs": "tsc",
-        "build:esm": "tsc --module esnext --target es2019 --outDir lib/esm && echo '{\"type\":\"module\"}' > lib/esm/package.json",
         "build:docs": "typedoc --hideGenerator --plugin typedoc-plugin-missing-exports src/index.ts",
-        "prepare": "npm run build"
+        "build:esm": "tsc --module esnext --target es2019 --outDir lib/esm && echo '{\"type\":\"module\"}' > lib/esm/package.json",
+        "format": "npm run format:es && npm run format:biome",
+        "format:biome": "biome check --write .",
+        "format:es": "npm run lint:es -- --fix",
+        "lint": "npm run lint:es && npm run lint:biome",
+        "lint:biome": "biome check .",
+        "lint:es": "eslint .",
+        "prepare": "npm run build",
+        "test": "npm run test:jest && npm run lint",
+        "test:jest": "jest"
     },
     "repository": {
         "type": "git",
@@ -49,19 +49,20 @@
         "domelementtype": "^2.3.0"
     },
     "devDependencies": {
+        "@biomejs/biome": "^2.4.4",
+        "@eslint/compat": "^2.0.2",
+        "@feedic/eslint-config": "^0.1.0",
         "@types/jest": "^29.5.14",
         "@types/node": "^25.3.0",
-        "@typescript-eslint/eslint-plugin": "^8.56.0",
-        "@typescript-eslint/parser": "^8.54.0",
+        "eslint": "^10.0.1",
         "eslint-config-prettier": "^10.1.8",
-        "eslint": "^8.57.1",
         "htmlparser2": "^10.1.0",
         "jest": "^29.7.0",
-        "prettier": "^3.8.1",
         "ts-jest": "^29.4.6",
-        "typedoc-plugin-missing-exports": "^3.1.0",
         "typedoc": "^0.27.9",
-        "typescript": "^5.8.3"
+        "typedoc-plugin-missing-exports": "^3.1.0",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.56.0"
     },
     "jest": {
         "preset": "ts-jest",
@@ -72,8 +73,5 @@
                 "$1.js"
             ]
         }
-    },
-    "prettier": {
-        "tabWidth": 4
     }
 }

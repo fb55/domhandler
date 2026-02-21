@@ -98,8 +98,8 @@ export abstract class Node {
         return this.prev;
     }
 
-    set previousSibling(prev: ChildNode | null) {
-        this.prev = prev;
+    set previousSibling(previous: ChildNode | null) {
+        this.prev = previous;
     }
 
     /**
@@ -402,7 +402,7 @@ export function isDocument(node: Node): node is Document {
  * @returns `true` if the node has children.
  */
 export function hasChildren(node: Node): node is ParentNode {
-    return Object.prototype.hasOwnProperty.call(node, "children");
+    return Object.hasOwn(node, "children");
 }
 
 /**
@@ -421,7 +421,9 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
     } else if (isTag(node)) {
         const children = recursive ? cloneChildren(node.children) : [];
         const clone = new Element(node.name, { ...node.attribs }, children);
-        children.forEach((child) => (child.parent = clone));
+        for (const child of children) {
+            child.parent = clone;
+        }
 
         if (node.namespace != null) {
             clone.namespace = node.namespace;
@@ -437,12 +439,16 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
     } else if (isCDATA(node)) {
         const children = recursive ? cloneChildren(node.children) : [];
         const clone = new CDATA(children);
-        children.forEach((child) => (child.parent = clone));
+        for (const child of children) {
+            child.parent = clone;
+        }
         result = clone;
     } else if (isDocument(node)) {
         const children = recursive ? cloneChildren(node.children) : [];
         const clone = new Document(children);
-        children.forEach((child) => (child.parent = clone));
+        for (const child of children) {
+            child.parent = clone;
+        }
 
         if (node["x-mode"]) {
             clone["x-mode"] = node["x-mode"];
@@ -482,9 +488,9 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
 function cloneChildren(childs: ChildNode[]): ChildNode[] {
     const children = childs.map((child) => cloneNode(child, true));
 
-    for (let i = 1; i < children.length; i++) {
-        children[i].prev = children[i - 1];
-        children[i - 1].next = children[i];
+    for (let index = 1; index < children.length; index++) {
+        children[index].prev = children[index - 1];
+        children[index - 1].next = children[index];
     }
 
     return children;
