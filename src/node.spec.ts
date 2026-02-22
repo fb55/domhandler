@@ -1,6 +1,6 @@
 import { ElementType } from "domelementtype";
-import { Parser, ParserOptions } from "htmlparser2";
-import Handler, { NodeWithChildren, DomHandlerOptions } from ".";
+import { Parser, type ParserOptions } from "htmlparser2";
+import Handler, { type DomHandlerOptions, type NodeWithChildren } from ".";
 import * as node from "./node";
 
 describe("Nodes", () => {
@@ -67,10 +67,12 @@ describe("Nodes", () => {
     it("should throw an error when cloning unsupported types", () => {
         class Doctype extends node.Node {
             type = ElementType.Doctype;
-            nodeType = NaN;
+            nodeType = Number.NaN;
         }
-        const el = new Doctype();
-        expect(() => el.cloneNode()).toThrow("Not implemented yet: doctype");
+        const element = new Doctype();
+        expect(() => element.cloneNode()).toThrow(
+            "Not implemented yet: doctype",
+        );
     });
 
     it("should detect tag types", () => {
@@ -90,9 +92,9 @@ describe("Nodes", () => {
         // We want to make sure TS is happy about the tagged types.
         const parent: node.ParentNode = new node.Document([]);
 
-        function setQuirks(el: node.ParentNode): void {
-            if (el.type === ElementType.Root) {
-                el["x-mode"] = "no-quirks";
+        function setQuirks(element: node.ParentNode): void {
+            if (element.type === ElementType.Root) {
+                element["x-mode"] = "no-quirks";
             }
         }
 
@@ -104,8 +106,8 @@ describe("Nodes", () => {
 
 type Options = DomHandlerOptions & ParserOptions;
 function parse(data: string, options: Options = {}): NodeWithChildren {
-    const handler = new Handler((err) => {
-        if (err) throw err;
+    const handler = new Handler((error) => {
+        if (error) throw error;
     }, options);
 
     const parser = new Parser(handler, options);

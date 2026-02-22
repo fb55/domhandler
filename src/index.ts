@@ -1,18 +1,21 @@
 import { ElementType } from "domelementtype";
 import {
-    ChildNode,
-    Element,
-    DataNode,
-    Text,
-    Comment,
     CDATA,
+    type ChildNode,
+    Comment,
+    type DataNode,
     Document,
+    Element,
+    type ParentNode,
     ProcessingInstruction,
-    ParentNode,
+    Text,
 } from "./node.js";
 
 export * from "./node.js";
 
+/**
+ * Configuration options for `DomHandler`.
+ */
 export interface DomHandlerOptions {
     /**
      * Add a `startIndex` property to nodes.
@@ -41,7 +44,7 @@ export interface DomHandlerOptions {
 }
 
 // Default options
-const defaultOpts: DomHandlerOptions = {
+const defaultOptions: DomHandlerOptions = {
     withStartIndices: false,
     withEndIndices: false,
     xmlMode: false,
@@ -55,6 +58,9 @@ interface ParserInterface {
 type Callback = (error: Error | null, dom: ChildNode[]) => void;
 type ElementCallback = (element: Element) => void;
 
+/**
+ * Event-based handler that builds a DOM tree from parser callbacks.
+ */
 export class DomHandler {
     /** The elements of the DOM */
     public dom: ChildNode[] = [];
@@ -96,7 +102,7 @@ export class DomHandler {
         // Make it possible to skip arguments, for backwards-compatibility
         if (typeof options === "function") {
             elementCB = options;
-            options = defaultOpts;
+            options = defaultOptions;
         }
         if (typeof callback === "object") {
             options = callback;
@@ -104,7 +110,7 @@ export class DomHandler {
         }
 
         this.callback = callback ?? null;
-        this.options = options ?? defaultOpts;
+        this.options = options ?? defaultOptions;
         this.elementCB = elementCB ?? null;
     }
 
@@ -137,13 +143,13 @@ export class DomHandler {
     public onclosetag(): void {
         this.lastNode = null;
 
-        const elem = this.tagStack.pop() as Element;
+        const element = this.tagStack.pop() as Element;
 
         if (this.options.withEndIndices) {
-            elem.endIndex = this.parser!.endIndex;
+            element.endIndex = this.parser!.endIndex;
         }
 
-        if (this.elementCB) this.elementCB(elem);
+        if (this.elementCB) this.elementCB(element);
     }
 
     public onopentag(name: string, attribs: { [key: string]: string }): void {
