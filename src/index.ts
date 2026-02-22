@@ -13,6 +13,9 @@ import {
 
 export * from "./node.js";
 
+/**
+ * Configuration options for `DomHandler`.
+ */
 export interface DomHandlerOptions {
     /**
      * Add a `startIndex` property to nodes.
@@ -55,6 +58,9 @@ interface ParserInterface {
 type Callback = (error: Error | null, dom: ChildNode[]) => void;
 type ElementCallback = (element: Element) => void;
 
+/**
+ * Event-based handler that builds a DOM tree from parser callbacks.
+ */
 export class DomHandler {
     /** The elements of the DOM */
     public dom: ChildNode[] = [];

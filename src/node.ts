@@ -36,6 +36,10 @@ export type ChildNode =
     | CDATA
     // `Document` is also used for document fragments, and can be a child node.
     | Document;
+
+/**
+ * Any node in the DOM tree.
+ */
 export type AnyNode = ParentNode | ChildNode;
 
 /**
@@ -402,7 +406,7 @@ export function isDocument(node: Node): node is Document {
  * @returns `true` if the node has children.
  */
 export function hasChildren(node: Node): node is ParentNode {
-    return Object.hasOwn(node, "children");
+    return Object.prototype.hasOwnProperty.call(node, "children");
 }
 
 /**
