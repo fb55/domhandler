@@ -120,7 +120,6 @@ export abstract class Node {
 
     /**
      * Clone this node, and optionally its children.
-     *
      * @param recursive Clone child nodes as well.
      * @returns A clone of the node.
      */
@@ -133,11 +132,14 @@ export abstract class Node {
  * A node that contains some data.
  */
 export abstract class DataNode extends Node {
+    data: string;
+
     /**
      * @param data The content of the data node
      */
-    constructor(public data: string) {
+    constructor(data: string) {
         super();
+        this.data = data;
     }
 
     /**
@@ -180,12 +182,11 @@ export class Comment extends DataNode {
  */
 export class ProcessingInstruction extends DataNode {
     type: ElementType.Directive = ElementType.Directive;
+    name: string;
 
-    constructor(
-        public name: string,
-        data: string,
-    ) {
+    constructor(name: string, data: string) {
         super(data);
+        this.name = name;
     }
 
     override get nodeType(): 1 {
@@ -204,11 +205,14 @@ export class ProcessingInstruction extends DataNode {
  * A node that can have children.
  */
 export abstract class NodeWithChildren extends Node {
+    children: ChildNode[];
+
     /**
      * @param children Children of the node. Only certain node types can have children.
      */
-    constructor(public children: ChildNode[]) {
+    constructor(children: ChildNode[]) {
         super();
+        this.children = children;
     }
 
     // Aliases
@@ -276,16 +280,21 @@ interface Attribute {
  * An element within the DOM.
  */
 export class Element extends NodeWithChildren {
+    name: string;
+    attribs: { [name: string]: string };
+    type: ElementType.Tag | ElementType.Script | ElementType.Style;
+
     /**
      * @param name Name of the tag, eg. `div`, `span`.
      * @param attribs Object mapping attribute names to attribute values.
      * @param children Children of the node.
+     * @param type Node type used for the new node instance.
      */
     constructor(
-        public name: string,
-        public attribs: { [name: string]: string },
+        name: string,
+        attribs: { [name: string]: string },
         children: ChildNode[] = [],
-        public type:
+        type:
             | ElementType.Tag
             | ElementType.Script
             | ElementType.Style = name === "script"
@@ -295,6 +304,9 @@ export class Element extends NodeWithChildren {
               : ElementType.Tag,
     ) {
         super(children);
+        this.name = name;
+        this.attribs = attribs;
+        this.type = type;
     }
 
     get nodeType(): 1 {
@@ -341,7 +353,6 @@ export class Element extends NodeWithChildren {
 
 /**
  * Checks if `node` is an element node.
- *
  * @param node Node to check.
  * @returns `true` if the node is an element node.
  */
@@ -351,7 +362,6 @@ export function isTag(node: Node): node is Element {
 
 /**
  * Checks if `node` is a CDATA node.
- *
  * @param node Node to check.
  * @returns `true` if the node is a CDATA node.
  */
@@ -361,7 +371,6 @@ export function isCDATA(node: Node): node is CDATA {
 
 /**
  * Checks if `node` is a text node.
- *
  * @param node Node to check.
  * @returns `true` if the node is a text node.
  */
@@ -371,7 +380,6 @@ export function isText(node: Node): node is Text {
 
 /**
  * Checks if `node` is a comment node.
- *
  * @param node Node to check.
  * @returns `true` if the node is a comment node.
  */
@@ -381,7 +389,6 @@ export function isComment(node: Node): node is Comment {
 
 /**
  * Checks if `node` is a directive node.
- *
  * @param node Node to check.
  * @returns `true` if the node is a directive node.
  */
@@ -391,7 +398,6 @@ export function isDirective(node: Node): node is ProcessingInstruction {
 
 /**
  * Checks if `node` is a document node.
- *
  * @param node Node to check.
  * @returns `true` if the node is a document node.
  */
@@ -401,17 +407,16 @@ export function isDocument(node: Node): node is Document {
 
 /**
  * Checks if `node` has children.
- *
  * @param node Node to check.
  * @returns `true` if the node has children.
  */
 export function hasChildren(node: Node): node is ParentNode {
-    return Object.prototype.hasOwnProperty.call(node, "children");
+    return Object.hasOwn(node, "children");
 }
 
 /**
  * Clone a node, and optionally its children.
- *
+ * @param node Node to inspect.
  * @param recursive Clone child nodes as well.
  * @returns A clone of the node.
  */
@@ -485,7 +490,6 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
 
 /**
  * Clone a list of child nodes.
- *
  * @param childs The child nodes to clone.
  * @returns A list of cloned child nodes.
  */
