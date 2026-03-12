@@ -318,7 +318,7 @@ export class Element extends NodeWithChildren {
      *
      * Available if parsing with parse5 and location info is enabled.
      */
-    sourceCodeLocation?: TagSourceCodeLocation | null;
+    declare sourceCodeLocation?: TagSourceCodeLocation | null;
 
     // DOM Level 1 aliases
 
