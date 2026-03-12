@@ -70,7 +70,7 @@ export abstract class Node {
      *
      * Available if parsing with parse5 and location info is enabled.
      */
-    sourceCodeLocation?: SourceCodeLocation | null;
+    declare sourceCodeLocation?: SourceCodeLocation | null;
 
     // Read-only aliases
 
@@ -263,7 +263,7 @@ export class Document extends NodeWithChildren {
     }
 
     /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
-    "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
+    declare "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
 }
 
 /**
