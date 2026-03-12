@@ -23,7 +23,7 @@
         "build": "npm run build:cjs && npm run build:esm",
         "build:cjs": "tsc",
         "build:docs": "typedoc --hideGenerator --plugin typedoc-plugin-missing-exports src/index.ts",
-        "build:esm": "tsc --module esnext --target es2019 --outDir lib/esm && echo '{\"type\":\"module\"}' > lib/esm/package.json",
+        "build:esm": "tsc --module esnext --target es2022 --outDir lib/esm && echo '{\"type\":\"module\"}' > lib/esm/package.json",
         "format": "npm run format:es && npm run format:biome",
         "format:biome": "biome check --write .",
         "format:es": "npm run lint:es -- --fix",
