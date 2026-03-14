@@ -1,22 +1,21 @@
-import { readdirSync } from "fs";
-import { resolve } from "path";
-import { Parser, ParserOptions } from "htmlparser2";
-import Handler, { Node, DomHandlerOptions } from ".";
+import { readdirSync } from "node:fs";
+import { resolve } from "node:path";
+import { Parser, type ParserOptions } from "htmlparser2";
+import Handler, { type DomHandlerOptions, type Node } from ".";
 
 const basePath = resolve(__dirname, "__fixtures__");
 
 describe("DomHandler", () => {
-    readdirSync(basePath)
+    for (const { name, html, options = {}, expected } of readdirSync(basePath)
         .filter((name) => name.endsWith(".json")) // Only allow .json files
         .map((name) => resolve(basePath, name))
-        .map(require)
-        .forEach(({ name, html, options = {}, expected }) =>
-            test(name, () => {
-                const result = parse(html, options);
+        .map(require)) {
+        test(name, () => {
+            const result = parse(html, options);
 
-                compare(result, expected);
-            }),
-        );
+            compare(result, expected);
+        });
+    }
 });
 
 function parse(
@@ -25,16 +24,16 @@ function parse(
 ): Node[] {
     const results: Node[][] = [];
 
-    const handler = new Handler((err: Error | null, actual: Node[]) => {
-        expect(err).toBeNull();
+    const handler = new Handler((error: Error | null, actual: Node[]) => {
+        expect(error).toBeNull();
         results.push(actual);
     }, options);
 
     const parser = new Parser(handler, options);
 
     // First, try to run the fixture via chunks
-    for (let i = 0; i < data.length; i++) {
-        parser.write(data.charAt(i));
+    for (let index = 0; index < data.length; index++) {
+        parser.write(data.charAt(index));
     }
 
     parser.done();
@@ -57,9 +56,9 @@ function compare(actual: unknown, expected: unknown) {
     ) {
         expect(actual).toBe(expected);
     } else {
-        for (const prop in expected) {
-            expect(prop in actual).toBeTruthy();
-            compare(actual[prop as never], expected[prop as never]);
+        for (const property in expected) {
+            expect(property in actual).toBeTruthy();
+            compare(actual[property as never], expected[property as never]);
         }
     }
 }

@@ -1,24 +1,26 @@
 import { ElementType } from "domelementtype";
 import {
-    ChildNode,
-    Element,
-    DataNode,
-    Text,
-    Comment,
     CDATA,
+    type ChildNode,
+    Comment,
+    type DataNode,
     Document,
+    Element,
+    type ParentNode,
     ProcessingInstruction,
-    ParentNode,
+    Text,
 } from "./node.js";
 
 export * from "./node.js";
 
+/**
+ * Configuration options for `DomHandler`.
+ */
 export interface DomHandlerOptions {
     /**
      * Add a `startIndex` property to nodes.
      * When the parser is used in a non-streaming fashion, `startIndex` is an integer
      * indicating the position of the start of the node in the document.
-     *
      * @default false
      */
     withStartIndices?: boolean;
@@ -27,21 +29,19 @@ export interface DomHandlerOptions {
      * Add an `endIndex` property to nodes.
      * When the parser is used in a non-streaming fashion, `endIndex` is an integer
      * indicating the position of the end of the node in the document.
-     *
      * @default false
      */
     withEndIndices?: boolean;
 
     /**
      * Treat the markup as XML.
-     *
      * @default false
      */
     xmlMode?: boolean;
 }
 
 // Default options
-const defaultOpts: DomHandlerOptions = {
+const defaultOptions: DomHandlerOptions = {
     withStartIndices: false,
     withEndIndices: false,
     xmlMode: false,
@@ -55,12 +55,15 @@ interface ParserInterface {
 type Callback = (error: Error | null, dom: ChildNode[]) => void;
 type ElementCallback = (element: Element) => void;
 
+/**
+ * Event-based handler that builds a DOM tree from parser callbacks.
+ */
 export class DomHandler {
     /** The elements of the DOM */
-    public dom: ChildNode[] = [];
+    dom: ChildNode[] = [];
 
     /** The root element for the DOM */
-    public root: Document = new Document(this.dom);
+    root: Document = new Document(this.dom);
 
     /** Called once parsing has completed. */
     private readonly callback: Callback | null;
@@ -88,7 +91,7 @@ export class DomHandler {
      * @param options Settings for the handler.
      * @param elementCB Callback whenever a tag is closed.
      */
-    public constructor(
+    constructor(
         callback?: Callback | null,
         options?: DomHandlerOptions | null,
         elementCB?: ElementCallback,
@@ -96,7 +99,7 @@ export class DomHandler {
         // Make it possible to skip arguments, for backwards-compatibility
         if (typeof options === "function") {
             elementCB = options;
-            options = defaultOpts;
+            options = defaultOptions;
         }
         if (typeof callback === "object") {
             options = callback;
@@ -104,16 +107,16 @@ export class DomHandler {
         }
 
         this.callback = callback ?? null;
-        this.options = options ?? defaultOpts;
+        this.options = options ?? defaultOptions;
         this.elementCB = elementCB ?? null;
     }
 
-    public onparserinit(parser: ParserInterface): void {
+    onparserinit(parser: ParserInterface): void {
         this.parser = parser;
     }
 
     // Resets the handler back to starting state
-    public onreset(): void {
+    onreset(): void {
         this.dom = [];
         this.root = new Document(this.dom);
         this.done = false;
@@ -123,43 +126,43 @@ export class DomHandler {
     }
 
     // Signals the handler that parsing is done
-    public onend(): void {
+    onend(): void {
         if (this.done) return;
         this.done = true;
         this.parser = null;
         this.handleCallback(null);
     }
 
-    public onerror(error: Error): void {
+    onerror(error: Error): void {
         this.handleCallback(error);
     }
 
-    public onclosetag(): void {
+    onclosetag(): void {
         this.lastNode = null;
 
-        const elem = this.tagStack.pop() as Element;
+        const element = this.tagStack.pop() as Element;
 
-        if (this.options.withEndIndices) {
-            elem.endIndex = this.parser!.endIndex;
+        if (this.options.withEndIndices && this.parser) {
+            element.endIndex = this.parser.endIndex;
         }
 
-        if (this.elementCB) this.elementCB(elem);
+        if (this.elementCB) this.elementCB(element);
     }
 
-    public onopentag(name: string, attribs: { [key: string]: string }): void {
+    onopentag(name: string, attribs: { [key: string]: string }): void {
         const type = this.options.xmlMode ? ElementType.Tag : undefined;
         const element = new Element(name, attribs, undefined, type);
         this.addNode(element);
         this.tagStack.push(element);
     }
 
-    public ontext(data: string): void {
+    ontext(data: string): void {
         const { lastNode } = this;
 
         if (lastNode && lastNode.type === ElementType.Text) {
             lastNode.data += data;
-            if (this.options.withEndIndices) {
-                lastNode.endIndex = this.parser!.endIndex;
+            if (this.options.withEndIndices && this.parser) {
+                lastNode.endIndex = this.parser.endIndex;
             }
         } else {
             const node = new Text(data);
@@ -168,7 +171,7 @@ export class DomHandler {
         }
     }
 
-    public oncomment(data: string): void {
+    oncomment(data: string): void {
         if (this.lastNode && this.lastNode.type === ElementType.Comment) {
             this.lastNode.data += data;
             return;
@@ -179,11 +182,11 @@ export class DomHandler {
         this.lastNode = node;
     }
 
-    public oncommentend(): void {
+    oncommentend(): void {
         this.lastNode = null;
     }
 
-    public oncdatastart(): void {
+    oncdatastart(): void {
         const text = new Text("");
         const node = new CDATA([text]);
 
@@ -193,11 +196,11 @@ export class DomHandler {
         this.lastNode = text;
     }
 
-    public oncdataend(): void {
+    oncdataend(): void {
         this.lastNode = null;
     }
 
-    public onprocessinginstruction(name: string, data: string): void {
+    onprocessinginstruction(name: string, data: string): void {
         const node = new ProcessingInstruction(name, data);
         this.addNode(node);
     }
@@ -216,12 +219,12 @@ export class DomHandler {
             | ChildNode
             | undefined;
 
-        if (this.options.withStartIndices) {
-            node.startIndex = this.parser!.startIndex;
+        if (this.options.withStartIndices && this.parser) {
+            node.startIndex = this.parser.startIndex;
         }
 
-        if (this.options.withEndIndices) {
-            node.endIndex = this.parser!.endIndex;
+        if (this.options.withEndIndices && this.parser) {
+            node.endIndex = this.parser.endIndex;
         }
 
         parent.children.push(node);
