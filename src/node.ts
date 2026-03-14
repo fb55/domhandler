@@ -416,7 +416,7 @@ export function hasChildren(node: Node): node is ParentNode {
 
 /**
  * Clone a node, and optionally its children.
- * @param node Node to inspect.
+ * @param node Node to clone.
  * @param recursive Clone child nodes as well.
  * @returns A clone of the node.
  */
