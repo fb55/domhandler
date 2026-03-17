@@ -1,7 +1,7 @@
 {
     "type": "module",
     "name": "domhandler",
-    "version": "6.0.0",
+    "version": "6.0.1",
     "description": "Handler for htmlparser2 that turns pages into a dom",
     "author": "Felix Boehm <me@feedic.com>",
     "funding": {
