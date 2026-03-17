@@ -32,6 +32,9 @@ jobs:
                         name: `@cheerio/${p.name}`,
                         version: p.version,
                         exports: { ".": "./src/index.ts" },
+                        imports: {
+                            "domelementtype": `jsr:@cheerio/domelementtype@${p.dependencies.domelementtype}`,
+                        },
                     };
                     writeFileSync("./jsr.json", JSON.stringify(jsrJson, null, 2));
                   '
