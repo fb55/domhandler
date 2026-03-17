@@ -1,7 +1,11 @@
 import { ElementType } from "domelementtype";
 import { Parser, type ParserOptions } from "htmlparser2";
-import Handler, { type DomHandlerOptions, type NodeWithChildren } from ".";
-import * as node from "./node";
+import { describe, expect, it } from "vitest";
+import Handler, {
+    type DomHandlerOptions,
+    type NodeWithChildren,
+} from "./index.js";
+import * as node from "./node.js";
 
 describe("Nodes", () => {
     it("should serialize to a Jest snapshot", () => {

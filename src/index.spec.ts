@@ -1,15 +1,17 @@
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Parser, type ParserOptions } from "htmlparser2";
-import Handler, { type DomHandlerOptions, type Node } from ".";
+import { describe, expect, test } from "vitest";
+import Handler, { type DomHandlerOptions, type Node } from "./index.js";
 
-const basePath = resolve(__dirname, "__fixtures__");
+const basePath = resolve(fileURLToPath(import.meta.url), "..", "__fixtures__");
 
 describe("DomHandler", () => {
     for (const { name, html, options = {}, expected } of readdirSync(basePath)
-        .filter((name) => name.endsWith(".json")) // Only allow .json files
+        .filter((name) => name.endsWith(".json"))
         .map((name) => resolve(basePath, name))
-        .map(require)) {
+        .map((path) => JSON.parse(readFileSync(path, "utf8")))) {
         test(name, () => {
             const result = parse(html, options);
 
@@ -36,7 +38,7 @@ function parse(
         parser.write(data.charAt(index));
     }
 
-    parser.done();
+    parser.end();
 
     // Then parse everything
     parser.parseComplete(data);
