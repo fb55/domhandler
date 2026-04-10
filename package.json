@@ -52,7 +52,7 @@
         "domelementtype": "^3.0.0"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.4.10",
+        "@biomejs/biome": "^2.4.11",
         "@eslint/compat": "^2.0.5",
         "@feedic/eslint-config": "^0.3.1",
         "@types/node": "^25.5.2",
