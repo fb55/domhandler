@@ -62,7 +62,7 @@
         "typedoc": "^0.28.19",
         "typedoc-plugin-missing-exports": "^4.1.3",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.61.1",
+        "typescript-eslint": "^8.62.0",
         "vitest": "^4.1.9"
     }
 }
