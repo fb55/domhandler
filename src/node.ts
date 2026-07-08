@@ -80,6 +80,12 @@ export abstract class Node {
      */
     abstract readonly nodeType: number;
 
+    /**
+     * [DOM spec](https://dom.spec.whatwg.org/#dom-node-nodename)-compatible
+     * alias.
+     */
+    abstract readonly nodeName: string;
+
     // Read-write aliases for properties
 
     /**
@@ -164,6 +170,10 @@ export class Text extends DataNode {
     get nodeType(): 3 {
         return 3;
     }
+
+    get nodeName(): "#text" {
+        return "#text";
+    }
 }
 
 /**
@@ -174,6 +184,10 @@ export class Comment extends DataNode {
 
     get nodeType(): 8 {
         return 8;
+    }
+
+    get nodeName(): "#comment" {
+        return "#comment";
     }
 }
 
@@ -191,6 +205,10 @@ export class ProcessingInstruction extends DataNode {
 
     override get nodeType(): 1 {
         return 1;
+    }
+
+    get nodeName(): string {
+        return this.name;
     }
 
     /** If this is a doctype, the document type name (parse5 only). */
@@ -250,6 +268,10 @@ export class CDATA extends NodeWithChildren {
     get nodeType(): 4 {
         return 4;
     }
+
+    get nodeName(): "#cdata-section" {
+        return "#cdata-section";
+    }
 }
 
 /**
@@ -260,6 +282,10 @@ export class Document extends NodeWithChildren {
 
     get nodeType(): 9 {
         return 9;
+    }
+
+    get nodeName(): "#document" {
+        return "#document";
     }
 
     /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
@@ -311,6 +337,10 @@ export class Element extends NodeWithChildren {
 
     get nodeType(): 1 {
         return 1;
+    }
+
+    get nodeName(): string {
+        return this.name;
     }
 
     /**
