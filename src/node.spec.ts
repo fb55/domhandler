@@ -72,6 +72,7 @@ describe("Nodes", () => {
         class Doctype extends node.Node {
             type = ElementType.Doctype;
             nodeType = Number.NaN;
+            nodeName = "doctype";
         }
         const element = new Doctype();
         expect(() => element.cloneNode()).toThrow(
@@ -105,6 +106,22 @@ describe("Nodes", () => {
         setQuirks(parent);
 
         expect(parent).toHaveProperty("x-mode", "no-quirks");
+    });
+
+    it("should expose DOM nodeName aliases", () => {
+        const text = new node.Text("text");
+        const comment = new node.Comment("comment");
+        const cdata = new node.CDATA([text]);
+        const document = new node.Document([cdata]);
+        const directive = new node.ProcessingInstruction("xml", "?xml");
+        const element = new node.Element("div", {});
+
+        expect(text.nodeName).toBe("#text");
+        expect(comment.nodeName).toBe("#comment");
+        expect(cdata.nodeName).toBe("#cdata-section");
+        expect(document.nodeName).toBe("#document");
+        expect(directive.nodeName).toBe("xml");
+        expect(element.nodeName).toBe("div");
     });
 });
 
