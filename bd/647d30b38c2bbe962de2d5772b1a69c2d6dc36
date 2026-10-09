@@ -1,0 +1,25 @@
+.github/workflows/codeql-analysis.yml
+  s_cdf7d3feeacb5b::t_5ad43bba27438e 25,30
+.github/workflows/nodejs-test.yml
+  s_cdf7d3feeacb5b::t_c1c6f12ca1648f 21,44
+.github/workflows/publish.yml
+  s_cdf7d3feeacb5b::t_a6133049b9b30a 18
+.github/workflows/site.yml
+  s_cdf7d3feeacb5b::t_ac1c9ac69fe2e6 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd647d30b38c2bbe962de2d5772b1a69c2d6dc36",
+  "prompts": {},
+  "sessions": {
+    "s_cdf7d3feeacb5b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12099-9640-7912-a885-2718c69285cc",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Felix Boehm <188768+fb55@users.noreply.github.com>"
+    }
+  }
+}
