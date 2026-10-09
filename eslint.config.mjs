@@ -44,5 +44,52 @@ export default defineConfig([
       "n/no-unsupported-features/es-builtins": 0,
     },
   },
-  eslintConfigBiome
+  eslintConfigBiome,
+// These nodes implement domhandler APIs, not the browser DOM.
+{
+    "files": [
+        "**/*.ts"
+    ],
+    "rules": {
+        "unicorn/better-dom-traversing": "off"
+    }
+},
+// Preserve class field initialization order and the public node layout.
+{
+    "files": [
+        "src/index.ts",
+        "src/node.ts"
+    ],
+    "rules": {
+        "unicorn/consistent-class-member-order": "off"
+    }
+},
+// Keep the public recursive clone parameter name.
+{
+    "files": [
+        "src/node.ts"
+    ],
+    "rules": {
+        "unicorn/consistent-boolean-name": "off"
+    }
+},
+// Fixture comparison checks dynamic keys, including inherited properties.
+{
+    "files": [
+        "src/index.spec.ts"
+    ],
+    "rules": {
+        "unicorn/no-computed-property-existence-check": "off"
+    }
+},
+
+// Biome enforces the Number namespace for these constants.
+{
+    "files": [
+        "**/*.ts"
+    ],
+    "rules": {
+        "unicorn/prefer-global-number-constants": "off"
+    }
+},
 ]);

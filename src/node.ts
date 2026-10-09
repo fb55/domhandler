@@ -335,9 +335,9 @@ export class Element extends NodeWithChildren {
     }
 
     get attributes(): Attribute[] {
-        return Object.keys(this.attribs).map((name) => ({
+        return Object.entries(this.attribs).map(([name, value]) => ({
             name,
-            value: this.attribs[name],
+            value,
             namespace: this["x-attribsNamespace"]?.[name],
             prefix: this["x-attribsPrefix"]?.[name],
         }));
