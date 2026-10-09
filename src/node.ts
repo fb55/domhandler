@@ -120,11 +120,11 @@ export abstract class Node {
 
     /**
      * Clone this node, and optionally its children.
-     * @param recursive Clone child nodes as well.
+     * @param isRecursive Clone child nodes as well.
      * @returns A clone of the node.
      */
-    cloneNode<T extends Node>(this: T, recursive = false): T {
-        return cloneNode(this, recursive);
+    cloneNode<T extends Node>(this: T, isRecursive = false): T {
+        return cloneNode(this, isRecursive);
     }
 }
 
@@ -218,7 +218,7 @@ export abstract class NodeWithChildren extends Node {
     // Aliases
     /** First child of the node. */
     get firstChild(): ChildNode | null {
-        return this.children[0] ?? null;
+        return this.children.at(0) ?? null;
     }
 
     /** Last child of the node. */
@@ -417,10 +417,10 @@ export function hasChildren(node: Node): node is ParentNode {
 /**
  * Clone a node, and optionally its children.
  * @param node Node to clone.
- * @param recursive Clone child nodes as well.
+ * @param isRecursive Clone child nodes as well.
  * @returns A clone of the node.
  */
-export function cloneNode<T extends Node>(node: T, recursive = false): T {
+export function cloneNode<T extends Node>(node: T, isRecursive = false): T {
     let result: Node;
 
     if (isText(node)) {
@@ -428,7 +428,7 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
     } else if (isComment(node)) {
         result = new Comment(node.data);
     } else if (isTag(node)) {
-        const children = recursive ? cloneChildren(node.children) : [];
+        const children = isRecursive ? cloneChildren(node.children) : [];
         const clone = new Element(node.name, { ...node.attribs }, children);
         for (const child of children) {
             child.parent = clone;
@@ -446,14 +446,14 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
 
         result = clone;
     } else if (isCDATA(node)) {
-        const children = recursive ? cloneChildren(node.children) : [];
+        const children = isRecursive ? cloneChildren(node.children) : [];
         const clone = new CDATA(children);
         for (const child of children) {
             child.parent = clone;
         }
         result = clone;
     } else if (isDocument(node)) {
-        const children = recursive ? cloneChildren(node.children) : [];
+        const children = isRecursive ? cloneChildren(node.children) : [];
         const clone = new Document(children);
         for (const child of children) {
             child.parent = clone;
