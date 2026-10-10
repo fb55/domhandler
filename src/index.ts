@@ -59,12 +59,6 @@ type ElementCallback = (element: Element) => void;
  * Event-based handler that builds a DOM tree from parser callbacks.
  */
 export class DomHandler {
-    /** The elements of the DOM */
-    dom: ChildNode[] = [];
-
-    /** The root element for the DOM */
-    root: Document = new Document(this.dom);
-
     /** Called once parsing has completed. */
     private readonly callback: Callback | null;
 
@@ -77,14 +71,20 @@ export class DomHandler {
     /** Indicated whether parsing has been completed. */
     private done = false;
 
+    /** Reference to the parser instance. Used for location information. */
+    private parser: ParserInterface | null = null;
+
+    /** The elements of the DOM */
+    dom: ChildNode[] = [];
+
+    /** The root element for the DOM */
+    root: Document = new Document(this.dom);
+
     /** Stack of open tags. */
     protected tagStack: ParentNode[] = [this.root];
 
     /** A data node that is still being written to. */
     protected lastNode: DataNode | null = null;
-
-    /** Reference to the parser instance. Used for location information. */
-    private parser: ParserInterface | null = null;
 
     /**
      * @param callback Called once parsing has completed.

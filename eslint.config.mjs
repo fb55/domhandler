@@ -45,14 +45,6 @@ export default defineConfig([
     },
   },
   eslintConfigBiome,
-    // Preserve the observable class field initialization order.
-    {
-      files: ["src/index.ts", "src/node.ts"],
-      rules: {
-        "unicorn/consistent-class-member-order": "off",
-      },
-    },
-
     // This module uses parser DOM nodes, which do not implement browser traversal APIs.
     {
       rules: {
@@ -62,7 +54,6 @@ export default defineConfig([
 
     // Use the Number namespace required by the existing Biome configuration.
     {
-      files: ["src/node.spec.ts"],
       rules: {
         "unicorn/prefer-global-number-constants": "off",
       },
