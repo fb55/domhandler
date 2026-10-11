@@ -45,17 +45,12 @@ export default defineConfig([
     },
   },
   eslintConfigBiome,
-    // This module uses parser DOM nodes, which do not implement browser traversal APIs.
-    {
-      rules: {
-        "unicorn/better-dom-traversing": "off",
-      },
+  {
+    rules: {
+      // This module uses parser DOM nodes, which do not implement browser traversal APIs.
+      "unicorn/better-dom-traversing": "off",
+      // Use the Number namespace required by the existing Biome configuration.
+      "unicorn/prefer-global-number-constants": "off",
     },
-
-    // Use the Number namespace required by the existing Biome configuration.
-    {
-      rules: {
-        "unicorn/prefer-global-number-constants": "off",
-      },
-    },
+  },
 ]);
