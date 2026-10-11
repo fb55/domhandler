@@ -60,7 +60,7 @@ function compare(actual: unknown, expected: unknown) {
         expect(actual).toBe(expected);
     } else {
         for (const property in expected) {
-            expect(Reflect.has(actual, property)).toBeTruthy();
+            expect(actual).toHaveProperty([property]);
             compare(actual[property as never], expected[property as never]);
         }
     }
