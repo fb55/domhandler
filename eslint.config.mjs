@@ -44,5 +44,13 @@ export default defineConfig([
       "n/no-unsupported-features/es-builtins": 0,
     },
   },
-  eslintConfigBiome
+  eslintConfigBiome,
+  {
+    rules: {
+      // This module uses parser DOM nodes, which do not implement browser traversal APIs.
+      "unicorn/better-dom-traversing": "off",
+      // Use the Number namespace required by the existing Biome configuration.
+      "unicorn/prefer-global-number-constants": "off",
+    },
+  },
 ]);

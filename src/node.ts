@@ -120,11 +120,11 @@ export abstract class Node {
 
     /**
      * Clone this node, and optionally its children.
-     * @param recursive Clone child nodes as well.
+     * @param shouldRecurse Clone child nodes as well.
      * @returns A clone of the node.
      */
-    cloneNode<T extends Node>(this: T, recursive = false): T {
-        return cloneNode(this, recursive);
+    cloneNode<T extends Node>(this: T, shouldRecurse = false): T {
+        return cloneNode(this, shouldRecurse);
     }
 }
 
@@ -184,6 +184,13 @@ export class ProcessingInstruction extends DataNode {
     type: ElementType.Directive = ElementType.Directive;
     name: string;
 
+    /** If this is a doctype, the document type name (parse5 only). */
+    "x-name"?: string;
+    /** If this is a doctype, the document type public identifier (parse5 only). */
+    "x-publicId"?: string;
+    /** If this is a doctype, the document type system identifier (parse5 only). */
+    "x-systemId"?: string;
+
     constructor(name: string, data: string) {
         super(data);
         this.name = name;
@@ -192,13 +199,6 @@ export class ProcessingInstruction extends DataNode {
     override get nodeType(): 1 {
         return 1;
     }
-
-    /** If this is a doctype, the document type name (parse5 only). */
-    "x-name"?: string;
-    /** If this is a doctype, the document type public identifier (parse5 only). */
-    "x-publicId"?: string;
-    /** If this is a doctype, the document type system identifier (parse5 only). */
-    "x-systemId"?: string;
 }
 
 /**
@@ -218,7 +218,7 @@ export abstract class NodeWithChildren extends Node {
     // Aliases
     /** First child of the node. */
     get firstChild(): ChildNode | null {
-        return this.children[0] ?? null;
+        return this.children.at(0) ?? null;
     }
 
     /** Last child of the node. */
@@ -258,12 +258,12 @@ export class CDATA extends NodeWithChildren {
 export class Document extends NodeWithChildren {
     type: ElementType.Root = ElementType.Root;
 
+    /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
+    declare "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
+
     get nodeType(): 9 {
         return 9;
     }
-
-    /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
-    declare "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
 }
 
 /**
@@ -283,6 +283,20 @@ export class Element extends NodeWithChildren {
     name: string;
     attribs: { [name: string]: string };
     type: ElementType.Tag | ElementType.Script | ElementType.Style;
+
+    /**
+     * `parse5` source code location info, with start & end tags.
+     *
+     * Available if parsing with parse5 and location info is enabled.
+     */
+    declare sourceCodeLocation?: TagSourceCodeLocation | null;
+
+    /** Element namespace (parse5 only). */
+    namespace?: string;
+    /** Element attribute namespaces (parse5 only). */
+    "x-attribsNamespace"?: Record<string, string>;
+    /** Element attribute namespace-related prefixes (parse5 only). */
+    "x-attribsPrefix"?: Record<string, string>;
 
     /**
      * @param name Name of the tag, eg. `div`, `span`.
@@ -313,13 +327,6 @@ export class Element extends NodeWithChildren {
         return 1;
     }
 
-    /**
-     * `parse5` source code location info, with start & end tags.
-     *
-     * Available if parsing with parse5 and location info is enabled.
-     */
-    declare sourceCodeLocation?: TagSourceCodeLocation | null;
-
     // DOM Level 1 aliases
 
     /**
@@ -335,20 +342,13 @@ export class Element extends NodeWithChildren {
     }
 
     get attributes(): Attribute[] {
-        return Object.keys(this.attribs).map((name) => ({
+        return Object.entries(this.attribs).map(([name, value]) => ({
             name,
-            value: this.attribs[name],
+            value,
             namespace: this["x-attribsNamespace"]?.[name],
             prefix: this["x-attribsPrefix"]?.[name],
         }));
     }
-
-    /** Element namespace (parse5 only). */
-    namespace?: string;
-    /** Element attribute namespaces (parse5 only). */
-    "x-attribsNamespace"?: Record<string, string>;
-    /** Element attribute namespace-related prefixes (parse5 only). */
-    "x-attribsPrefix"?: Record<string, string>;
 }
 
 /**
@@ -417,10 +417,10 @@ export function hasChildren(node: Node): node is ParentNode {
 /**
  * Clone a node, and optionally its children.
  * @param node Node to clone.
- * @param recursive Clone child nodes as well.
+ * @param shouldRecurse Clone child nodes as well.
  * @returns A clone of the node.
  */
-export function cloneNode<T extends Node>(node: T, recursive = false): T {
+export function cloneNode<T extends Node>(node: T, shouldRecurse = false): T {
     let result: Node;
 
     if (isText(node)) {
@@ -428,7 +428,7 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
     } else if (isComment(node)) {
         result = new Comment(node.data);
     } else if (isTag(node)) {
-        const children = recursive ? cloneChildren(node.children) : [];
+        const children = shouldRecurse ? cloneChildren(node.children) : [];
         const clone = new Element(node.name, { ...node.attribs }, children);
         for (const child of children) {
             child.parent = clone;
@@ -446,14 +446,14 @@ export function cloneNode<T extends Node>(node: T, recursive = false): T {
 
         result = clone;
     } else if (isCDATA(node)) {
-        const children = recursive ? cloneChildren(node.children) : [];
+        const children = shouldRecurse ? cloneChildren(node.children) : [];
         const clone = new CDATA(children);
         for (const child of children) {
             child.parent = clone;
         }
         result = clone;
     } else if (isDocument(node)) {
-        const children = recursive ? cloneChildren(node.children) : [];
+        const children = shouldRecurse ? cloneChildren(node.children) : [];
         const clone = new Document(children);
         for (const child of children) {
             child.parent = clone;

@@ -8,10 +8,11 @@ import Handler, { type DomHandlerOptions, type Node } from "./index.js";
 const basePath = resolve(fileURLToPath(import.meta.url), "..", "__fixtures__");
 
 describe("DomHandler", () => {
-    for (const { name, html, options = {}, expected } of readdirSync(basePath)
+    const fixtures = readdirSync(basePath)
         .filter((name) => name.endsWith(".json"))
         .map((name) => resolve(basePath, name))
-        .map((path) => JSON.parse(readFileSync(path, "utf8")))) {
+        .map((path) => JSON.parse(readFileSync(path, "utf8")));
+    for (const { name, html, options = {}, expected } of fixtures) {
         test(name, () => {
             const result = parse(html, options);
 
@@ -59,7 +60,7 @@ function compare(actual: unknown, expected: unknown) {
         expect(actual).toBe(expected);
     } else {
         for (const property in expected) {
-            expect(property in actual).toBeTruthy();
+            expect(actual).toHaveProperty([property]);
             compare(actual[property as never], expected[property as never]);
         }
     }
