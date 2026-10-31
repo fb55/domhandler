@@ -429,7 +429,12 @@ export function cloneNode<T extends Node>(node: T, shouldRecurse = false): T {
         result = new Comment(node.data);
     } else if (isTag(node)) {
         const children = shouldRecurse ? cloneChildren(node.children) : [];
-        const clone = new Element(node.name, { ...node.attribs }, children);
+        const clone = new Element(
+            node.name,
+            { ...node.attribs },
+            children,
+            node.type,
+        );
         for (const child of children) {
             child.parent = clone;
         }
