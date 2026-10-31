@@ -51,6 +51,17 @@ describe("Nodes", () => {
         expect(result.cloneNode(true)).toStrictEqual(result);
     });
 
+    it.each(["script", "style"])(
+        "should preserve XML %s element types when cloning",
+        (name) => {
+            const result = parse(`<${name}>text</${name}>`, { xmlMode: true });
+            const element = result.children[0];
+            expect(element.type).toBe(ElementType.Tag);
+            expect(element.cloneNode().type).toBe(ElementType.Tag);
+            expect(result.cloneNode(true)).toStrictEqual(result);
+        },
+    );
+
     it("should not clone recursively if not asked to", () => {
         const result = parse("<div foo=bar><div><div>");
         expect(result.cloneNode(true)).toEqual(result);
