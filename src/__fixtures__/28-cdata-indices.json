@@ -1,0 +1,32 @@
+{
+    "name": "CDATA text gets the start and end indices of its CDATA node",
+    "options": {
+        "xmlMode": true,
+        "withStartIndices": true,
+        "withEndIndices": true
+    },
+    "html": "<a><![CDATA[x]]></a>",
+    "expected": [
+        {
+            "type": "tag",
+            "name": "a",
+            "startIndex": 0,
+            "endIndex": 19,
+            "children": [
+                {
+                    "type": "cdata",
+                    "startIndex": 3,
+                    "endIndex": 15,
+                    "children": [
+                        {
+                            "type": "text",
+                            "data": "x",
+                            "startIndex": 3,
+                            "endIndex": 15
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
