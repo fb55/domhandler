@@ -1,10 +1,11 @@
 src/node.spec.ts
-  s_453c150e7df5ec::t_6c871c7acf0316 90-109,111
+  s_453c150e7df5ec::t_6c871c7acf0316 90-109,90-91,94-98,101,103-109,111
   s_6bbbbbc7cea8e7::t_9692af55faa71e 69-89,110
 src/node.ts
   s_6bbbbbc7cea8e7::t_93c5d76ed6a82b 504,506
-  s_453c150e7df5ec::t_aca027711f4b1e 417-426,434-477
+  s_453c150e7df5ec::t_aca027711f4b1e 417-426,418-420,422,424-426,434-477,434-438,442-445,448-451,455-457,459-473,475-477
   s_0a36f5044cfe90::t_0334b8f680a522 488
+  s_6bbbbbc7cea8e7::t_12cc01decb43ed 534
 ---
 {
   "schema_version": "authorship/3.0.0",
