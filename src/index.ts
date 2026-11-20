@@ -192,6 +192,9 @@ export class DomHandler {
 
         this.addNode(node);
 
+        // The text is not added via `addNode`, so give it the indices here.
+        text.startIndex = node.startIndex;
+        text.endIndex = node.endIndex;
         text.parent = node;
         this.lastNode = text;
     }
