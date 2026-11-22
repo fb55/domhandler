@@ -200,6 +200,12 @@ const config: OxlintConfig = defineConfig({
                     "error",
                     {
                         patterns: [
+                            // Check test paths before allowing relative imports.
+                            {
+                                regex: String.raw`(?:^|/)(?:__fixtures__|__snapshots__|__tests__|tests?)(?:/|$)|\.(?:spec|test)(?:\.[cm]?[jt]sx?)?$`,
+                                message:
+                                    "Published modules must not import tests or fixtures.",
+                            },
                             {
                                 group: [
                                     "**",

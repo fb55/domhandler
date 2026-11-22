@@ -1,11 +1,27 @@
 import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import ignore from "ignore";
 import { visit } from "jsonc-parser";
 import {
     validate,
     validateFunding,
     validateMain,
+    validatePeerDependenciesMeta,
 } from "package-json-validator";
 import manifest from "../package.json" with { type: "json" };
+
+const fields: {
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    peerDependencies?: Record<string, string>;
+    peerDependenciesMeta?: Record<string, unknown>;
+} = manifest;
+const {
+    dependencies = {},
+    devDependencies = {},
+    peerDependencies = {},
+    peerDependenciesMeta,
+} = fields;
 
 const { errorMessages } = validate(manifest, true);
 errorMessages.push(
@@ -33,27 +49,64 @@ if (
     errorMessages.push("Missing author or contributors in package.json");
 }
 
-for (const name of Object.keys(manifest.dependencies)) {
-    if (Object.hasOwn(manifest.devDependencies, name)) {
+for (const name of Object.keys(dependencies)) {
+    if (
+        Object.hasOwn(devDependencies, name) ||
+        Object.hasOwn(peerDependencies, name)
+    ) {
         errorMessages.push(
-            `Dependency also declared in devDependencies: ${name}`,
+            `Dependency also declared as a dev or peer dependency: ${name}`,
         );
     }
 }
 
-const fixtureDirectory = "src/__fixtures__/";
-const fixtures = readdirSync(new URL(`../${fixtureDirectory}`, import.meta.url))
-    .filter((name) => name.endsWith(".json"))
-    .map((name) => `${fixtureDirectory}${name}`);
+for (const name of Object.keys(peerDependencies)) {
+    if (!Object.hasOwn(devDependencies, name)) {
+        errorMessages.push(
+            `Peer dependency missing from devDependencies: ${name}`,
+        );
+    }
+}
 
-for (const file of [
-    "package.json",
-    "tsconfig.json",
-    "tsconfig.build.json",
-    ...fixtures,
-]) {
+if (peerDependenciesMeta) {
+    errorMessages.push(
+        ...validatePeerDependenciesMeta(peerDependenciesMeta).errorMessages,
+    );
+    for (const name of Object.keys(peerDependenciesMeta)) {
+        if (!Object.hasOwn(peerDependencies, name)) {
+            errorMessages.push(
+                `Peer metadata has no corresponding peer dependency: ${name}`,
+            );
+        }
+    }
+}
+
+const projectRoot = join(import.meta.dirname, "..");
+const ignored = ignore()
+    .add(readFileSync(join(projectRoot, ".gitignore"), "utf8"))
+    .add([".*", "package-lock.json"]);
+
+function* jsonFiles(directory = ""): Generator<string> {
+    for (const entry of readdirSync(join(projectRoot, directory), {
+        withFileTypes: true,
+    })) {
+        const path = `${directory}${entry.name}`;
+        if (entry.isDirectory()) {
+            const child = `${path}/`;
+            if (!ignored.ignores(child)) yield* jsonFiles(child);
+        } else if (
+            entry.isFile() &&
+            path.endsWith(".json") &&
+            !ignored.ignores(path)
+        ) {
+            yield path;
+        }
+    }
+}
+
+for (const file of jsonFiles()) {
     const objectKeys: Set<string>[] = [];
-    visit(readFileSync(new URL(`../${file}`, import.meta.url), "utf8"), {
+    visit(readFileSync(join(projectRoot, file), "utf8"), {
         onObjectBegin() {
             objectKeys.push(new Set());
         },
