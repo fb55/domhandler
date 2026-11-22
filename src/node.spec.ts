@@ -61,8 +61,8 @@ describe("Nodes", () => {
 
     it("should not clone recursively if not asked to", () => {
         const result = parse("<div foo=bar><div><div>");
-        expect(result.cloneNode(true)).toEqual(result);
-        expect(result.cloneNode(false)).not.toEqual(result);
+        expect(result.cloneNode(true)).toStrictEqual(result);
+        expect(result.cloneNode(false)).not.toStrictEqual(result);
         expect(result.cloneNode()).toHaveProperty("children", []);
     });
 
@@ -104,17 +104,17 @@ describe("Nodes", () => {
         // We want to make sure TS is happy about the tagged types.
         const parent: node.ParentNode = new node.Document([]);
 
-        function setQuirks(element: node.ParentNode): void {
-            if (element.type === ElementType.Root) {
-                element["x-mode"] = "no-quirks";
-            }
-        }
-
         setQuirks(parent);
 
         expect(parent).toHaveProperty("x-mode", "no-quirks");
     });
 });
+
+function setQuirks(element: node.ParentNode): void {
+    if (element.type === ElementType.Root) {
+        element["x-mode"] = "no-quirks";
+    }
+}
 
 type Options = DomHandlerOptions & ParserOptions;
 function parse(data: string, options: Options = {}): NodeWithChildren {
