@@ -1,0 +1,34 @@
+package.json
+  s_4495b45e57ab2c::t_84f0aaa063366a 5-9,11-14,19-25,59-61
+src/index.ts
+  s_4495b45e57ab2c::t_84f0aaa063366a 2,144-145
+  s_4495b45e57ab2c::t_8b42b9eef8a208 154
+src/node.ts
+  s_4495b45e57ab2c::t_8b42b9eef8a208 284,309,493
+oxfmt.config.ts
+  s_4495b45e57ab2c::t_8b42b9eef8a208 6-7
+src/node.spec.ts
+  s_4495b45e57ab2c::t_84f0aaa063366a 4
+oxlint.config.ts
+  s_4495b45e57ab2c::t_84f0aaa063366a 2,4
+  s_4495b45e57ab2c::t_8b42b9eef8a208 112,145,156,238-241
+  s_4495b45e57ab2c::t_ed1cd9dd2dc55e 242
+src/index.spec.ts
+  s_4495b45e57ab2c::t_84f0aaa063366a 3,6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7e40938597d51893aee021a17cda884a944ec73d",
+  "prompts": {},
+  "sessions": {
+    "s_4495b45e57ab2c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a204e0-37fa-7521-a313-2ca5c918ac99",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Felix Boehm <188768+fb55@users.noreply.github.com>"
+    }
+  }
+}
