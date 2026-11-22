@@ -281,7 +281,7 @@ interface Attribute {
  */
 export class Element extends NodeWithChildren {
     name: string;
-    attribs: { [name: string]: string };
+    attribs: Record<string, string>;
     type: ElementType.Tag | ElementType.Script | ElementType.Style;
 
     /**
@@ -306,7 +306,7 @@ export class Element extends NodeWithChildren {
      */
     constructor(
         name: string,
-        attribs: { [name: string]: string },
+        attribs: Record<string, string>,
         children: ChildNode[] = [],
         type:
             | ElementType.Tag
@@ -490,7 +490,7 @@ export function cloneNode<T extends Node>(node: T, shouldRecurse = false): T {
         result.sourceCodeLocation = node.sourceCodeLocation;
     }
 
-    return result as T;
+    return result as /* oxlint-disable-line typescript/no-unsafe-type-assertion -- Preserve the public generic return type for clones created by node kind. */ T;
 }
 
 /**

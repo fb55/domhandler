@@ -1,6 +1,7 @@
 import { ElementType } from "domelementtype";
 import { Parser, type ParserOptions } from "htmlparser2";
 import { describe, expect, it } from "vitest";
+
 import Handler, {
     type DomHandlerOptions,
     type NodeWithChildren,

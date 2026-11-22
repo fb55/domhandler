@@ -1,4 +1,5 @@
 import { ElementType } from "domelementtype";
+
 import {
     CDATA,
     type ChildNode,
@@ -140,7 +141,8 @@ export class DomHandler {
     onclosetag(): void {
         this.lastNode = null;
 
-        const element = this.tagStack.pop() as Element;
+        const element =
+            this.tagStack.pop() as /* oxlint-disable-line typescript/no-unsafe-type-assertion -- Matching open tags push elements above the document root. */ Element;
 
         if (this.options.withEndIndices && this.parser) {
             element.endIndex = this.parser.endIndex;
@@ -149,7 +151,7 @@ export class DomHandler {
         if (this.elementCB) this.elementCB(element);
     }
 
-    onopentag(name: string, attribs: { [key: string]: string }): void {
+    onopentag(name: string, attribs: Record<string, string>): void {
         const type = this.options.xmlMode ? ElementType.Tag : undefined;
         const element = new Element(name, attribs, undefined, type);
         this.addNode(element);

@@ -1,5 +1,7 @@
 import { builtinModules } from "node:module";
+
 import { defineConfig, type OxlintConfig } from "oxlint";
+
 import manifest from "./package.json" with { type: "json" };
 
 const runtimePackages = Object.keys(manifest.dependencies);
@@ -107,11 +109,7 @@ const config: OxlintConfig = defineConfig({
         // DOM node type IDs are standardized numbers, and T is a conventional type parameter.
         ...off("no-magic-numbers", "id-length"),
         // Node APIs use null for absent links and accept undefined for optional inputs.
-        ...off(
-            "unicorn/no-null",
-            "no-undefined",
-            "unicorn/no-useless-undefined",
-        ),
+        ...off("unicorn/no-null", "no-undefined"),
         // Modern syntax and the runtime's features are fine.
         ...off(
             "oxc/no-async-await",
@@ -123,9 +121,7 @@ const config: OxlintConfig = defineConfig({
             "no-nested-ternary",
             "unicorn/no-nested-ternary",
             "unicorn/no-array-reduce",
-            "no-await-in-loop",
             "promise/avoid-new",
-            "promise/prefer-await-to-then",
             "node/no-top-level-await",
             "node/no-sync",
             "import/no-nodejs-modules",
@@ -146,7 +142,7 @@ const config: OxlintConfig = defineConfig({
             "no-inline-comments",
             "init-declarations",
         ),
-        // Keep the existing import and export order and module structure.
+        // Let the formatter sort imports and keep the existing module structure.
         ...off(
             "sort-imports",
             "import/consistent-type-specifier-style",
@@ -157,24 +153,13 @@ const config: OxlintConfig = defineConfig({
             "import/exports-last",
             "import/no-relative-parent-imports",
         ),
-        // TypeScript has the types (and infers them for readonly values and assertions).
+        // TypeScript supplies the JSDoc types, and mutable inputs are supported.
         ...off(
             "jsdoc/require-param-type",
             "jsdoc/require-returns-type",
             "jsdoc/require-yields-type",
             "jsdoc/require-throws-type",
             "typescript/prefer-readonly-parameter-types",
-            "typescript/no-unsafe-type-assertion",
-            "typescript/no-non-null-assertion",
-            "typescript/promise-function-async",
-        ),
-        // Method signatures, mapped types, `{}` and type aliases are chosen for how they check and infer.
-        ...off(
-            "typescript/method-signature-style",
-            "typescript/consistent-indexed-object-style",
-            "typescript/consistent-type-definitions",
-            "typescript/ban-types",
-            "no-redeclare",
         ),
         // Nullish equality is allowed by eqeqeq's smart mode.
         ...off("no-eq-null"),
@@ -183,7 +168,6 @@ const config: OxlintConfig = defineConfig({
             "vitest/prefer-expect-assertions",
             "vitest/require-test-timeout",
             "vitest/no-importing-vitest-globals",
-            "vitest/require-hook",
             "vitest/max-expects",
             "vitest/prefer-to-be-truthy",
             "vitest/prefer-to-be-falsy",
@@ -250,6 +234,11 @@ const config: OxlintConfig = defineConfig({
                     { exceptMethods: ["nodeType"] },
                 ],
             },
+        },
+        {
+            // Tests assert fixture shapes and index into objects during comparison.
+            files: ["**/*.spec.ts"],
+            rules: off("typescript/no-unsafe-type-assertion"),
         },
         {
             // A namespace keeps node constructors and predicates together in tests.

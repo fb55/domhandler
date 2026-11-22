@@ -1,7 +1,9 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+
 import { Parser, type ParserOptions } from "htmlparser2";
 import { describe, expect, it } from "vitest";
+
 import Handler, { type DomHandlerOptions, type Node } from "./index.js";
 
 const basePath = resolve(import.meta.dirname, "__fixtures__");
