@@ -20,5 +20,5 @@
         "types": ["node"],
         "noEmit": true
     },
-    "include": ["src", "scripts", "*.config.ts"]
+    "include": ["src", "*.config.ts"]
 }
