@@ -1,0 +1,21 @@
+tsconfig.json
+  s_8eac401adc3f7b::t_eeb30944ae83c0 23
+package.json
+  s_8eac401adc3f7b::t_eeb30944ae83c0 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "329cb716b87639581731082edb9e32debdf5a0a3",
+  "prompts": {},
+  "sessions": {
+    "s_8eac401adc3f7b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20471-e468-7eb3-aada-3bd62f10bf95",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Felix Boehm <188768+fb55@users.noreply.github.com>"
+    }
+  }
+}
