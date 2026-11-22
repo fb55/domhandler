@@ -490,7 +490,8 @@ export function cloneNode<T extends Node>(node: T, shouldRecurse = false): T {
         result.sourceCodeLocation = node.sourceCodeLocation;
     }
 
-    return result as /* oxlint-disable-line typescript/no-unsafe-type-assertion -- Preserve the public generic return type for clones created by node kind. */ T;
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Cloning by node kind preserves the existing generic return signature.
+    return result as T;
 }
 
 /**

@@ -141,8 +141,8 @@ export class DomHandler {
     onclosetag(): void {
         this.lastNode = null;
 
-        const element =
-            this.tagStack.pop() as /* oxlint-disable-line typescript/no-unsafe-type-assertion -- Matching open tags push elements above the document root. */ Element;
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Each closing tag matches an element pushed above the document root.
+        const element = this.tagStack.pop() as Element;
 
         if (this.options.withEndIndices && this.parser) {
             element.endIndex = this.parser.endIndex;
