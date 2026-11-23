@@ -6,8 +6,6 @@
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "outDir": "dist",
-        "rootDir": "src",
 
         "strict": true,
 
@@ -18,13 +16,9 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
 
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "types": ["node"],
+        "noEmit": true
     },
-    "include": ["src"],
-    "exclude": [
-        "**/*.spec.ts",
-        "**/__fixtures__/*",
-        "**/__tests__/*",
-        "**/__snapshots__/*"
-    ]
+    "include": ["src", "*.config.ts"]
 }

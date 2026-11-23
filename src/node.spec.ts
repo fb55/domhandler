@@ -1,11 +1,23 @@
 import { ElementType } from "domelementtype";
 import { Parser, type ParserOptions } from "htmlparser2";
 import { describe, expect, it } from "vitest";
+
 import Handler, {
     type DomHandlerOptions,
     type NodeWithChildren,
 } from "./index.js";
-import * as node from "./node.js";
+import {
+    Document,
+    hasChildren,
+    isCDATA,
+    isComment,
+    isDirective,
+    isDocument,
+    isTag,
+    isText,
+    Node,
+    type ParentNode,
+} from "./node.js";
 
 describe("Nodes", () => {
     it("should serialize to a Jest snapshot", () => {
@@ -61,8 +73,8 @@ describe("Nodes", () => {
 
     it("should not clone recursively if not asked to", () => {
         const result = parse("<div foo=bar><div><div>");
-        expect(result.cloneNode(true)).toEqual(result);
-        expect(result.cloneNode(false)).not.toEqual(result);
+        expect(result.cloneNode(true)).toStrictEqual(result);
+        expect(result.cloneNode(false)).not.toStrictEqual(result);
         expect(result.cloneNode()).toHaveProperty("children", []);
     });
 
@@ -77,7 +89,7 @@ describe("Nodes", () => {
     });
 
     it("should throw an error when cloning unsupported types", () => {
-        class Doctype extends node.Node {
+        class Doctype extends Node {
             type = ElementType.Doctype;
             nodeType = Number.NaN;
         }
@@ -90,31 +102,31 @@ describe("Nodes", () => {
     it("should detect tag types", () => {
         const result = parse("<div foo=bar><div><div>").children[0];
 
-        expect(node.isTag(result)).toBe(true);
-        expect(node.hasChildren(result)).toBe(true);
+        expect(isTag(result)).toBe(true);
+        expect(hasChildren(result)).toBe(true);
 
-        expect(node.isCDATA(result)).toBe(false);
-        expect(node.isText(result)).toBe(false);
-        expect(node.isComment(result)).toBe(false);
-        expect(node.isDirective(result)).toBe(false);
-        expect(node.isDocument(result)).toBe(false);
+        expect(isCDATA(result)).toBe(false);
+        expect(isText(result)).toBe(false);
+        expect(isComment(result)).toBe(false);
+        expect(isDirective(result)).toBe(false);
+        expect(isDocument(result)).toBe(false);
     });
 
     it("should support using tagged types", () => {
         // We want to make sure TS is happy about the tagged types.
-        const parent: node.ParentNode = new node.Document([]);
-
-        function setQuirks(element: node.ParentNode): void {
-            if (element.type === ElementType.Root) {
-                element["x-mode"] = "no-quirks";
-            }
-        }
+        const parent: ParentNode = new Document([]);
 
         setQuirks(parent);
 
         expect(parent).toHaveProperty("x-mode", "no-quirks");
     });
 });
+
+function setQuirks(element: ParentNode): void {
+    if (element.type === ElementType.Root) {
+        element["x-mode"] = "no-quirks";
+    }
+}
 
 type Options = DomHandlerOptions & ParserOptions;
 function parse(data: string, options: Options = {}): NodeWithChildren {

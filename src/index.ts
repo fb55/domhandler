@@ -1,4 +1,5 @@
 import { ElementType } from "domelementtype";
+
 import {
     CDATA,
     type ChildNode,
@@ -97,18 +98,22 @@ export class DomHandler {
         elementCB?: ElementCallback,
     ) {
         // Make it possible to skip arguments, for backwards-compatibility
+        let resolvedCallback = callback;
+        let resolvedOptions = options;
+        let resolvedElementCallback = elementCB;
+
         if (typeof options === "function") {
-            elementCB = options;
-            options = defaultOptions;
+            resolvedElementCallback = options;
+            resolvedOptions = defaultOptions;
         }
         if (typeof callback === "object") {
-            options = callback;
-            callback = undefined;
+            resolvedOptions = callback;
+            resolvedCallback = undefined;
         }
 
-        this.callback = callback ?? null;
-        this.options = options ?? defaultOptions;
-        this.elementCB = elementCB ?? null;
+        this.callback = resolvedCallback ?? null;
+        this.options = resolvedOptions ?? defaultOptions;
+        this.elementCB = resolvedElementCallback ?? null;
     }
 
     onparserinit(parser: ParserInterface): void {
@@ -140,6 +145,7 @@ export class DomHandler {
     onclosetag(): void {
         this.lastNode = null;
 
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Each closing tag matches an element pushed above the document root.
         const element = this.tagStack.pop() as Element;
 
         if (this.options.withEndIndices && this.parser) {
@@ -149,7 +155,7 @@ export class DomHandler {
         if (this.elementCB) this.elementCB(element);
     }
 
-    onopentag(name: string, attribs: { [key: string]: string }): void {
+    onopentag(name: string, attribs: Record<string, string>): void {
         const type = this.options.xmlMode ? ElementType.Tag : undefined;
         const element = new Element(name, attribs, undefined, type);
         this.addNode(element);
