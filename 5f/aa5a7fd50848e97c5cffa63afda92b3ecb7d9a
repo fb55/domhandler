@@ -1,0 +1,25 @@
+src/node.ts
+  s_1b971d3e3104a8::t_9b66d7e46df7bb 1-3,167,179,204,256,271,334
+src/index.ts
+  s_1b971d3e3104a8::t_9b66d7e46df7bb 1-2,149,158,170,229,234
+src/node.spec.ts
+  s_1b971d3e3104a8::t_9b66d7e46df7bb 9
+src/index.spec.ts
+  s_1b971d3e3104a8::t_9b66d7e46df7bb 24,68,72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5faa5a7fd50848e97c5cffa63afda92b3ecb7d9a",
+  "prompts": {},
+  "sessions": {
+    "s_1b971d3e3104a8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a2061d-d05a-7253-956f-d80ee1c1c78b",
+        "model": "gpt-6.2-sol"
+      },
+      "human_author": "Felix Boehm <188768+fb55@users.noreply.github.com>"
+    }
+  }
+}
