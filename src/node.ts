@@ -1,5 +1,3 @@
-/* oxlint-disable jsdoc/require-returns -- The DOM alias summaries already describe what their getters return. */
-
 import { ElementType, isTag as isTagRaw } from "domelementtype";
 
 interface SourceCodeLocation {

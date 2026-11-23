@@ -87,6 +87,8 @@ const config: OxlintConfig = defineConfig({
         // DOM node types are exposed as prototype getters with constant values.
         "class-methods-use-this": ["error", { exceptMethods: ["nodeType"] }],
         "typescript/class-literal-property-style": ["error", "getters"],
+        // Getter summaries describe the value they expose.
+        "jsdoc/require-returns": ["error", { checkGetters: false }],
         "vitest/consistent-test-filename": [
             "error",
             { pattern: String.raw`\.spec\.ts$` },
