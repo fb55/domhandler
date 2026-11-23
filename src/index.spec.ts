@@ -66,9 +66,9 @@ function compare(actual: unknown, expected: unknown): void {
     ) {
         expect(actual).toBe(expected);
     } else {
-        for (const property of Object.keys(expected)) {
+        for (const [property, value] of Object.entries(expected)) {
             expect(actual).toHaveProperty([property]);
-            compare(actual[property as never], expected[property as never]);
+            compare(Reflect.get(actual, property), value);
         }
     }
 }
