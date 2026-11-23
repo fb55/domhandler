@@ -21,6 +21,7 @@ describe("DomHandler", () => {
         .map((name) => resolve(basePath, name))
         .map((path) => JSON.parse(readFileSync(path, "utf8")) as Fixture);
 
+    // oxlint-disable-next-line vitest/expect-expect -- The compare helper asserts that the result matches the fixture.
     it.each(fixtures)("$name", ({ html, options = {}, expected }) => {
         const result = parse(html, options);
 
@@ -64,9 +65,11 @@ function compare(actual: unknown, expected: unknown): void {
         typeof actual !== "object" ||
         actual === null
     ) {
+        // oxlint-disable-next-line vitest/no-conditional-expect -- The recursive comparison checks primitive values and null directly.
         expect(actual).toBe(expected);
     } else {
         for (const [property, value] of Object.entries(expected)) {
+            // oxlint-disable-next-line vitest/no-conditional-expect -- The recursive comparison checks each expected object property.
             expect(actual).toHaveProperty([property]);
             compare(Reflect.get(actual, property), value);
         }

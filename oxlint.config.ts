@@ -210,51 +210,9 @@ const config: OxlintConfig = defineConfig({
             },
         },
         {
-            files: ["src/index.ts"],
-            rules: {
-                // The constructor normalizes legacy positional arguments in place.
-                ...off("no-param-reassign"),
-                // Omitted and false parser options both disable index tracking.
-                "typescript/strict-boolean-expressions": [
-                    "error",
-                    { allowNullableBoolean: true },
-                ],
-            },
-        },
-        {
-            files: ["src/node.ts"],
-            rules: {
-                // Preserve DOM-compatible prototype getters and their existing API docs.
-                ...off(
-                    "typescript/class-literal-property-style",
-                    "jsdoc/require-returns",
-                ),
-                "class-methods-use-this": [
-                    "error",
-                    { exceptMethods: ["nodeType"] },
-                ],
-            },
-        },
-        {
             // Tests assert fixture shapes and index into objects during comparison.
             files: ["**/*.spec.ts"],
             rules: off("typescript/no-unsafe-type-assertion"),
-        },
-        {
-            // A namespace keeps node constructors and predicates together in tests.
-            files: ["src/node.spec.ts"],
-            rules: off("import/no-namespace"),
-        },
-        {
-            // The recursive comparison asserts primitives and object properties separately.
-            files: ["src/index.spec.ts"],
-            rules: {
-                ...off("vitest/no-conditional-expect"),
-                "vitest/expect-expect": [
-                    "error",
-                    { assertFunctionNames: ["expect", "compare"] },
-                ],
-            },
         },
     ],
 });

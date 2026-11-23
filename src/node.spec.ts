@@ -6,6 +6,7 @@ import Handler, {
     type DomHandlerOptions,
     type NodeWithChildren,
 } from "./index.js";
+// oxlint-disable-next-line import/no-namespace -- A namespace keeps node constructors and predicates together in tests.
 import * as node from "./node.js";
 
 describe("Nodes", () => {
