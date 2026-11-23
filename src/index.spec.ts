@@ -21,20 +21,23 @@ describe("DomHandler", () => {
     const fixtures = readdirSync(basePath)
         .filter((name) => name.endsWith(".json"))
         .map((name) => resolve(basePath, name))
-        .map((path) => JSON.parse(readFileSync(path, "utf8")) as Fixture);
+        .map(
+            // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The checked-in test fixtures use the Fixture schema.
+            (path) => JSON.parse(readFileSync(path, "utf8")) as Fixture,
+        );
 
-    // oxlint-disable-next-line vitest/expect-expect -- compare asserts fixture values recursively so failures identify the mismatched property.
     it.each(fixtures)("$name", ({ html, options = {}, expected }) => {
-        const result = parse(html, options);
+        const [streamed, complete] = parse(html, options);
 
-        compare(result, expected);
+        expect(streamed).toStrictEqual(complete);
+        compare(streamed, expected);
     });
 });
 
 function parse(
     data: string,
     options: DomHandlerOptions & ParserOptions,
-): Node[] {
+): [Node[], Node[]] {
     const results: Node[][] = [];
 
     const handler = new Handler((error: Error | null, actual: Node[]) => {
@@ -54,10 +57,7 @@ function parse(
     // Then parse everything
     parser.parseComplete(data);
 
-    // Ensure streaming doesn't change anything.
-    expect(results[0]).toStrictEqual(results[1]);
-
-    return results[0];
+    return [results[0], results[1]];
 }
 
 function compare(actual: unknown, expected: unknown): void {

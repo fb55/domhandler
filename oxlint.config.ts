@@ -218,11 +218,6 @@ const config: OxlintConfig = defineConfig({
                 ...off("unicorn/prefer-at"),
             },
         },
-        {
-            // Tests assert fixture shapes and index into objects during comparison.
-            files: ["**/*.spec.ts"],
-            rules: off("typescript/no-unsafe-type-assertion"),
-        },
     ],
 });
 
