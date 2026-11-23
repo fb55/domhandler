@@ -6,8 +6,18 @@ import Handler, {
     type DomHandlerOptions,
     type NodeWithChildren,
 } from "./index.js";
-// oxlint-disable-next-line import/no-namespace -- A namespace keeps node constructors and predicates together in tests.
-import * as node from "./node.js";
+import {
+    Document,
+    hasChildren,
+    isCDATA,
+    isComment,
+    isDirective,
+    isDocument,
+    isTag,
+    isText,
+    Node,
+    type ParentNode,
+} from "./node.js";
 
 describe("Nodes", () => {
     it("should serialize to a Jest snapshot", () => {
@@ -79,7 +89,7 @@ describe("Nodes", () => {
     });
 
     it("should throw an error when cloning unsupported types", () => {
-        class Doctype extends node.Node {
+        class Doctype extends Node {
             type = ElementType.Doctype;
             nodeType = Number.NaN;
         }
@@ -92,19 +102,19 @@ describe("Nodes", () => {
     it("should detect tag types", () => {
         const result = parse("<div foo=bar><div><div>").children[0];
 
-        expect(node.isTag(result)).toBe(true);
-        expect(node.hasChildren(result)).toBe(true);
+        expect(isTag(result)).toBe(true);
+        expect(hasChildren(result)).toBe(true);
 
-        expect(node.isCDATA(result)).toBe(false);
-        expect(node.isText(result)).toBe(false);
-        expect(node.isComment(result)).toBe(false);
-        expect(node.isDirective(result)).toBe(false);
-        expect(node.isDocument(result)).toBe(false);
+        expect(isCDATA(result)).toBe(false);
+        expect(isText(result)).toBe(false);
+        expect(isComment(result)).toBe(false);
+        expect(isDirective(result)).toBe(false);
+        expect(isDocument(result)).toBe(false);
     });
 
     it("should support using tagged types", () => {
         // We want to make sure TS is happy about the tagged types.
-        const parent: node.ParentNode = new node.Document([]);
+        const parent: ParentNode = new Document([]);
 
         setQuirks(parent);
 
@@ -112,7 +122,7 @@ describe("Nodes", () => {
     });
 });
 
-function setQuirks(element: node.ParentNode): void {
+function setQuirks(element: ParentNode): void {
     if (element.type === ElementType.Root) {
         element["x-mode"] = "no-quirks";
     }

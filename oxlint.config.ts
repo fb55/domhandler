@@ -80,6 +80,13 @@ const config: OxlintConfig = defineConfig({
             { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
         ],
         "typescript/no-unnecessary-condition": "error",
+        "typescript/strict-boolean-expressions": [
+            "error",
+            { allowNullableBoolean: true },
+        ],
+        // DOM node types are exposed as prototype getters with constant values.
+        "class-methods-use-this": ["error", { exceptMethods: ["nodeType"] }],
+        "typescript/class-literal-property-style": ["error", "getters"],
         "vitest/consistent-test-filename": [
             "error",
             { pattern: String.raw`\.spec\.ts$` },

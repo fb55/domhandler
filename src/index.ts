@@ -1,5 +1,3 @@
-/* oxlint-disable no-param-reassign -- The constructor normalizes legacy positional arguments in place. */
-
 import { ElementType } from "domelementtype";
 
 import {
@@ -100,18 +98,22 @@ export class DomHandler {
         elementCB?: ElementCallback,
     ) {
         // Make it possible to skip arguments, for backwards-compatibility
+        let resolvedCallback = callback;
+        let resolvedOptions = options;
+        let resolvedElementCallback = elementCB;
+
         if (typeof options === "function") {
-            elementCB = options;
-            options = defaultOptions;
+            resolvedElementCallback = options;
+            resolvedOptions = defaultOptions;
         }
         if (typeof callback === "object") {
-            options = callback;
-            callback = undefined;
+            resolvedOptions = callback;
+            resolvedCallback = undefined;
         }
 
-        this.callback = callback ?? null;
-        this.options = options ?? defaultOptions;
-        this.elementCB = elementCB ?? null;
+        this.callback = resolvedCallback ?? null;
+        this.options = resolvedOptions ?? defaultOptions;
+        this.elementCB = resolvedElementCallback ?? null;
     }
 
     onparserinit(parser: ParserInterface): void {
@@ -146,7 +148,6 @@ export class DomHandler {
         // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Each closing tag matches an element pushed above the document root.
         const element = this.tagStack.pop() as Element;
 
-        // oxlint-disable-next-line typescript/strict-boolean-expressions -- Omitted and false options both disable end index tracking.
         if (this.options.withEndIndices && this.parser) {
             element.endIndex = this.parser.endIndex;
         }
@@ -155,7 +156,6 @@ export class DomHandler {
     }
 
     onopentag(name: string, attribs: Record<string, string>): void {
-        // oxlint-disable-next-line typescript/strict-boolean-expressions -- Omitted and false options both use the default element type.
         const type = this.options.xmlMode ? ElementType.Tag : undefined;
         const element = new Element(name, attribs, undefined, type);
         this.addNode(element);
@@ -167,7 +167,6 @@ export class DomHandler {
 
         if (lastNode && lastNode.type === ElementType.Text) {
             lastNode.data += data;
-            // oxlint-disable-next-line typescript/strict-boolean-expressions -- Omitted and false options both disable end index tracking.
             if (this.options.withEndIndices && this.parser) {
                 lastNode.endIndex = this.parser.endIndex;
             }
@@ -226,12 +225,10 @@ export class DomHandler {
             | ChildNode
             | undefined;
 
-        // oxlint-disable-next-line typescript/strict-boolean-expressions -- Omitted and false options both disable start index tracking.
         if (this.options.withStartIndices && this.parser) {
             node.startIndex = this.parser.startIndex;
         }
 
-        // oxlint-disable-next-line typescript/strict-boolean-expressions -- Omitted and false options both disable end index tracking.
         if (this.options.withEndIndices && this.parser) {
             node.endIndex = this.parser.endIndex;
         }

@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/class-literal-property-style -- Keep DOM-compatible nodeType getters on the prototype. */
 /* oxlint-disable jsdoc/require-returns -- The DOM alias summaries already describe what their getters return. */
 
 import { ElementType, isTag as isTagRaw } from "domelementtype";
@@ -164,7 +163,6 @@ export abstract class DataNode extends Node {
 export class Text extends DataNode {
     type: ElementType.Text = ElementType.Text;
 
-    // oxlint-disable-next-line class-methods-use-this -- This node kind has a constant DOM node type.
     get nodeType(): 3 {
         return 3;
     }
@@ -176,7 +174,6 @@ export class Text extends DataNode {
 export class Comment extends DataNode {
     type: ElementType.Comment = ElementType.Comment;
 
-    // oxlint-disable-next-line class-methods-use-this -- This node kind has a constant DOM node type.
     get nodeType(): 8 {
         return 8;
     }
@@ -201,7 +198,6 @@ export class ProcessingInstruction extends DataNode {
         this.name = name;
     }
 
-    // oxlint-disable-next-line class-methods-use-this -- This node kind has a constant DOM node type.
     override get nodeType(): 1 {
         return 1;
     }
@@ -253,7 +249,6 @@ export abstract class NodeWithChildren extends Node {
 export class CDATA extends NodeWithChildren {
     type: ElementType.CDATA = ElementType.CDATA;
 
-    // oxlint-disable-next-line class-methods-use-this -- This node kind has a constant DOM node type.
     get nodeType(): 4 {
         return 4;
     }
@@ -268,7 +263,6 @@ export class Document extends NodeWithChildren {
     /** [Document mode](https://dom.spec.whatwg.org/#concept-document-limited-quirks) (parse5 only). */
     declare "x-mode"?: "no-quirks" | "quirks" | "limited-quirks";
 
-    // oxlint-disable-next-line class-methods-use-this -- This node kind has a constant DOM node type.
     get nodeType(): 9 {
         return 9;
     }
@@ -331,7 +325,6 @@ export class Element extends NodeWithChildren {
         this.type = type;
     }
 
-    // oxlint-disable-next-line class-methods-use-this -- This node kind has a constant DOM node type.
     get nodeType(): 1 {
         return 1;
     }
@@ -499,7 +492,7 @@ export function cloneNode<T extends Node>(node: T, shouldRecurse = false): T {
         result.sourceCodeLocation = node.sourceCodeLocation;
     }
 
-    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Cloning by node kind preserves the existing generic return signature.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The public API returns T, but the implementation constructs clones by built-in node kind.
     return result as T;
 }
 
